@@ -162,6 +162,9 @@ if __name__ == "__main__":
     parser.add_argument('-idx', '--index', type=int, default=1, help='CUDA device index') 
     parser.add_argument('-recsig','--sig_rec_0', type=float, default=1, help='Sigma of recurrent weight distribution')
     parser.add_argument('-sign','--sigma_n', type=float, default=0.0, help='activity noise sigma')
+    parser.add_argument('-del0','--delay0', type=int, default=100, help='start of go cue distribution')
+    parser.add_argument('-del1','--delay1', type=int, default=200, help='end of go cue distribution')
+    
     args = parser.parse_args()
     
 
@@ -224,7 +227,7 @@ if __name__ == "__main__":
     init_p =  { 'n1':n1,  'tau':tau, 'training_epochs':training_epochs, 'perturb_epochs':perturb_epochs, 'lr':lr, 'use_sigma':use_sigma,
                 'sig_rec_0':sig_rec_0, 'sig_inp_0':sig_inp_0, 'sig_fbk_0':sig_fbk_0, 'sig_out_0':sig_out_0 , 'velocity':velocity,
                 'maxT':maxT, 'test_maxT':test_maxT, 'add_bias_n':add_bias_n, 'device':device,
-                'nonlinearity':nonlinearity, 'sigma_n':args.sigma_n }
+                'nonlinearity':nonlinearity, 'sigma_n':args.sigma_n, 'delays':[args.delay0, args.delay1] }
     
 
 

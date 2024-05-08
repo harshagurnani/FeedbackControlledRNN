@@ -47,6 +47,8 @@ def plot_readout_trace( output, stimulus=None, target=None, delays = [100,200],\
     plt.figure()
     for idx in plot_idx:
         if stimulus is not None:
+            theta =  np.arctan2(stimulus[idx,-1,1], stimulus[idx,-1,0])
+            cidx = .5 + 0.5*(theta/np.pi)
             tms = np.where(stimulus[idx,:,2]>0)
             tms=tms[0][0]
             tms  = (delays[1]-tms)/(delays[1]-delays[0])
@@ -54,7 +56,7 @@ def plot_readout_trace( output, stimulus=None, target=None, delays = [100,200],\
                 tms=0
             elif tms>1:
                 tms=1
-            plt.plot(tm[tm0:], output[idx,tm0:,:], color=cm(tms))
+            plt.plot(tm[tm0:], output[idx,tm0:,:], color=cm(cidx))
         else:
             plt.plot(tm[tm0:], output[idx,tm0:,:], color='k')
 

@@ -329,7 +329,7 @@ def compute_wt_change(  wmp_train, use_mod=None, usewt='W_in_0' ):
     return meanFb0, meanFb1, deltaFb
 
 def compute_wt_angle(  wmp_train, usewt='W_in_0' ):
-
+    ''' angle between columns of input wts before and after retraining'''
     Wfbk0 = wmp_train['posttrain']['params0'][usewt]
     Wfbk1 = wmp_train['posttrain']['params1'][usewt]
 
@@ -827,15 +827,14 @@ def get_vectorfld_change_all( res, params0, params1 , nonlinearity='relu', alpha
 def get_variance_in_U( X, U, npc=8 ):
     tr, tm, neu = X.shape
     X = np.reshape(X, (tr*tm,neu))
-    X = X-np.mean(X,axis=0)
+    X = X-np.mean(X,axis=0)       
+    sigma = X.T @ X             # covariance matrix
 
-    sigma = X.T @ X
-
-    uv = U[:,:npc].T
+    uv = U[:,:npc].T            # orthonormalized dimensions
     ev_within = np.trace( uv @ sigma @ uv.T )
     ev_total = np.trace(sigma)
 
-    return ev_within/ev_total
+    return ev_within/ev_total       # fractional variance
 
 
 
@@ -848,24 +847,24 @@ def get_change_IM( Xpre, Xpost, U, wpert, npc=8 ):
     Xpost = np.reshape(Xpost, (tr*tm,neu))
     Xpost = Xpost-np.mean(Xpost,axis=0)
 
-    sigma_pre = Xpre.T @ Xpre
+    sigma_pre = Xpre.T @ Xpre               # covariance matrix
     sigma_post = Xpost.T @ Xpost
 
     uv = U[:,:npc].T
-    ev_within_pre = np.diag( uv @ sigma_pre @ uv.T )
+    ev_within_pre = np.diag( uv @ sigma_pre @ uv.T )    # ev along different pcs
     ev_total_pre = np.trace(sigma_pre)
 
     ev_within_post = np.diag( uv @ sigma_post @ uv.T )
     ev_total_post = np.trace(sigma_post)
 
-    u1 = np.sqrt(ev_within_pre/ev_total_pre)
+    u1 = np.sqrt(ev_within_pre/ev_total_pre)            # variance-along-dim vector
     u1 = u1/ll.norm(u1)
     u2 = np.sqrt(ev_within_post/ev_total_post)
     u2 = u2/ll.norm(u2)
 
     px1 = PCA( n_components=npc)
     px2 = PCA( n_components=npc)
-    px1.fit(Xpre)
+    px1.fit(Xpre)               # new manifolds
     px2.fit(Xpost)
     angles = np.rad2deg( ll.subspace_angles(px1.components_.T, px2.components_.T ))
 
@@ -874,7 +873,7 @@ def get_change_IM( Xpre, Xpost, U, wpert, npc=8 ):
     influence_post = np.zeros((npc,wpert.shape[1]))
     for jj in range(npc):
         for kk in range(wpert.shape[1]):
-            influence_pre[jj,kk] = u1[jj]* uv[jj,:]@wpert[:,kk]
+            influence_pre[jj,kk] = u1[jj]* uv[jj,:]@wpert[:,kk]         #impact of each pc dim on each wpert dim
             influence_post[jj,kk] = u2[jj]* uv[jj,:]@wpert[:,kk] 
     influence_pre = influence_pre/ll.norm(influence_pre,axis=0)
     influence_post = influence_post/ll.norm(influence_post, axis=0)
