@@ -137,6 +137,7 @@ def gen_architecture( modeltype, init_p, nmf=0, n_output = 15, n_hidden = 50 ):
 # --------------------------------------------------------------------#
 
 if __name__ == "__main__":
+    
 
     parser = argparse.ArgumentParser(description='Create Models')
     parser.add_argument('-pf', '--prefix', type=str, default='', 
@@ -164,6 +165,7 @@ if __name__ == "__main__":
     parser.add_argument('-sign','--sigma_n', type=float, default=0.0, help='activity noise sigma')
     parser.add_argument('-del0','--delay0', type=int, default=100, help='start of go cue distribution')
     parser.add_argument('-del1','--delay1', type=int, default=200, help='end of go cue distribution')
+    parser.add_argument('-pos', '--decode_p', type=int, default=0, help='Use position decoder')
     
     args = parser.parse_args()
     
@@ -227,7 +229,7 @@ if __name__ == "__main__":
     init_p =  { 'n1':n1,  'tau':tau, 'training_epochs':training_epochs, 'perturb_epochs':perturb_epochs, 'lr':lr, 'use_sigma':use_sigma,
                 'sig_rec_0':sig_rec_0, 'sig_inp_0':sig_inp_0, 'sig_fbk_0':sig_fbk_0, 'sig_out_0':sig_out_0 , 'velocity':velocity,
                 'maxT':maxT, 'test_maxT':test_maxT, 'add_bias_n':add_bias_n, 'device':device,
-                'nonlinearity':nonlinearity, 'sigma_n':args.sigma_n, 'delays':[args.delay0, args.delay1] }
+                'nonlinearity':nonlinearity, 'sigma_n':args.sigma_n, 'delays':[args.delay0, args.delay1], 'decode_p': args.decode_p  }
     
 
 

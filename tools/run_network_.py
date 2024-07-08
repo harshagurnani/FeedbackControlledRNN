@@ -37,6 +37,7 @@ import plotting.plot_helpers as phelp
 from matplotlib import pyplot as pp
 
 import mfiles.model_network as mnet
+import mfiles.model_network_position as mpos
 import mfiles.model_lowrank as mlow
 import mfiles.model_controllers as mcon
 import mfiles.training as mtrain
@@ -88,7 +89,16 @@ class mainModel:
         if self.params['use_sigma']:
             if self.params['model_type'] == 'Target':
                 # ----- Feedback is in the form of vector to target
-                self.model = mnet.RNN_w_TargetError(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'],
+                if self.params['decode_p']:
+                    self.model = mpos.RNN_w_TargetError_Pos(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'],
+                                        nonlinearity=self.params['nonlinearity'], add_bias=self.params['add_bias'],bias_0=self.params['bias_0'], add_bias_n=self.params['add_bias_n'], bias_n=self.params['bias_n'], sigma_n=self.params['sigma_n'],
+                                        W_in_0 = self.params['W_in_0'], W_rec_0=self.params['W_rec_0'], W_fbk_0 = self.params['W_fbk_0'], W_out_0=self.params['W_out_0'], 
+                                        W_in_mask=self.params['W_in_mask'], W_fbk_mask=self.params['W_fbk_mask'], 
+                                        learn_inp=self.params['train_inp'], learn_rec=self.params['train_rec'], learn_fbk=self.params['train_fbk'],
+                                        fbk_state=self.params['fbk_state'], ff_mod=ff_mod, fb_mod=fbk_mod,
+                                        sig_inp_0=self.params['sig_inp_0'], sig_fbk_0=self.params['sig_fbk_0'], sig_rec_0=self.params['sig_rec_0'], sig_out_0=self.params['sig_out_0'] )                    
+                else:
+                    self.model = mnet.RNN_w_TargetError(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'],
                                         nonlinearity=self.params['nonlinearity'], add_bias=self.params['add_bias'],bias_0=self.params['bias_0'], add_bias_n=self.params['add_bias_n'], bias_n=self.params['bias_n'], sigma_n=self.params['sigma_n'],
                                         W_in_0 = self.params['W_in_0'], W_rec_0=self.params['W_rec_0'], W_fbk_0 = self.params['W_fbk_0'], W_out_0=self.params['W_out_0'], 
                                         W_in_mask=self.params['W_in_mask'], W_fbk_mask=self.params['W_fbk_mask'], 
@@ -105,7 +115,15 @@ class mainModel:
                                         sig_inp_0=self.params['sig_inp_0'], sig_fbk_0=self.params['sig_fbk_0'], sig_rec_0=self.params['sig_rec_0'], sig_out_0=self.params['sig_out_0'] )
         else:
             if self.params['model_type'] == 'Target':
-                self.model = mnet.RNN_w_TargetError(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'], 
+                if self.params['decode_p']:
+                    self.model = mpos.RNN_w_TargetError_Pos(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'], 
+                                        nonlinearity=self.params['nonlinearity'], add_bias=self.params['add_bias'],bias_0=self.params['bias_0'], add_bias_n=self.params['add_bias_n'], bias_n=self.params['bias_n'], sigma_n=self.params['sigma_n'],
+                                        W_in_0 = self.params['W_in_0'], W_rec_0=self.params['W_rec_0'], W_fbk_0 = self.params['W_fbk_0'], W_out_0=self.params['W_out_0'], \
+                                        W_in_mask=self.params['W_in_mask'], W_fbk_mask=self.params['W_fbk_mask'], 
+                                        learn_inp=self.params['train_inp'], learn_rec=self.params['train_rec'], learn_fbk=self.params['train_fbk'],
+                                        fbk_state=self.params['fbk_state'], ff_mod=ff_mod, fb_mod=fbk_mod )                    
+                else:
+                    self.model = mnet.RNN_w_TargetError(n_inputs=self.params['input_dim'], n_outputs=self.params['output_dim'], n_neurons=self.params['n1'], tau=self.params['tau'], dtype=self.params['dtype'], device=self.params['device'], 
                                         nonlinearity=self.params['nonlinearity'], add_bias=self.params['add_bias'],bias_0=self.params['bias_0'], add_bias_n=self.params['add_bias_n'], bias_n=self.params['bias_n'], sigma_n=self.params['sigma_n'],
                                         W_in_0 = self.params['W_in_0'], W_rec_0=self.params['W_rec_0'], W_fbk_0 = self.params['W_fbk_0'], W_out_0=self.params['W_out_0'], \
                                         W_in_mask=self.params['W_in_mask'], W_fbk_mask=self.params['W_fbk_mask'], 
@@ -128,7 +146,7 @@ class mainModel:
     
     ##################
     
-    def test_model(self, dic=None, tdata=None):
+    def test_model(self, dic=None, tdata=None, noisex=None):
         '''Test output of current model'''
         p = self.params
         if tdata is None:
@@ -139,9 +157,13 @@ class mainModel:
         target = torch.Tensor(tdata['target_output'].transpose(1,0,2)).to(dtype=p['dtype'], device=self.params['device'])       # this is only for training rnn toproduce certain trajectory - not input to model
         hold = torch.Tensor(tdata['hold_target'].transpose(1,0,2)).to(dtype=p['dtype'], device=self.params['device'])
         test_bump = torch.Tensor(tdata['test_bump'].transpose(1,0,2)).to(dtype=p['dtype'], device=self.params['device'])
+        if noisex is not None:
+            noise_rnn = torch.Tensor( noisex.transpose(1,0,2)).to(dtype=p['dtype'], device=self.params['device'])
+        else:
+            noise_rnn=None
 
         if p['model_type']=='Target':
-            testout,testl1 = self.model(p['dt'], stim, hold, test_bump)
+            testout,testl1 = self.model(p['dt'], stim, hold, test_bump, noisex=noise_rnn)
         elif p['model_type']=='LowRank':
             testout,testl1 = self.model(p['dt'], stim, hold, test_bump)
         
@@ -149,7 +171,7 @@ class mainModel:
         activity1 = testl1.cpu().detach().numpy().transpose(1,0,2)
 
         res = {'target':tdata['target_output'], 'stimulus':tdata['stimulus'], 'delays': tdata['del_used'], \
-                'test_bump':tdata['test_bump'], 'end_target':tdata['hold_target'],
+                'test_bump':tdata['test_bump'], 'end_target':tdata['hold_target'], 'noisex':noisex,
                 'activity1':activity1,'output':output, 'sim_params':p}  
         
         if dic is not None:

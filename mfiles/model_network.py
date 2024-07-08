@@ -86,7 +86,7 @@ class RNN_w_TargetError(nn.Module):
             self.n_ffinputs = ff_mod.n_output
             
 
-
+        # initialize RNN weights
         self.init_weights( learn_inp=learn_inp, learn_rec=learn_rec, learn_fbk=learn_fbk, W_in_0=W_in_0, W_rec_0=W_rec_0, W_fbk_0=W_fbk_0, 
                            add_bias_n=add_bias_n, bias_n=bias_n )
 
@@ -211,7 +211,7 @@ class RNN_w_TargetError(nn.Module):
     
 
     # ------------------- forward pass ------------------
-    def f_step(self,xin,x1,r1,err):
+    def f_step(self,xin,x1,r1,err,noisex):
         "Network dynamics: Update activity in single step"
         '''Args:    Are of 1 x batch_size x N   shape, where N is relevant dimension
             - xin = feedforward stim (n_inputs)
@@ -233,15 +233,15 @@ class RNN_w_TargetError(nn.Module):
                                 + r1 @ self.W_rec           # recurrent current
                                 + inp @ self.W_in           # ff input current
                                 + fbk @ self.W_fbk          # fbk current
-                                + torch.randn(size = x1.shape).to(device=self.device)* self.sigma_n ) # noise
-        
+                                + torch.randn(size = x1.shape).to(device=self.device)* self.sigma_n    # internal noise
+                                + noisex        )           # injected noise
         # apply nonlinearity
         r1 = self.nonlinearity(x1)
 
         return x1,r1
  
 
-    def forward(self, dt, stim, target, perturb=None):
+    def forward(self, dt, stim, target, perturb=None, noisex=None):
         " entire forward pass of network for all tsteps (in a trial - seq dependence) and batches (parallel) "
         '''
         Args:
@@ -261,16 +261,19 @@ class RNN_w_TargetError(nn.Module):
         
         currpos = torch.zeros(self.batch_size, self.n_outputs).to(dtype=self.dtype, device=self.device)             #.to(self.device)     # current Cursor state
         
-        if perturb is None:
+        if perturb is None:         # cursor perturbation
             perturb=torch.zeros( tsteps, self.batch_size, self.n_outputs).to(dtype=self.dtype, device=self.device)  #.to(self.device)
             #print('not perturbing output')
+        if noisex is None:          # activity perturbation
+            noisex=torch.zeros( tsteps, self.batch_size, self.n_neurons).to(dtype=self.dtype, device=self.device)
+        
 
         # All tsteps TENSOR
         hidden0 = torch.zeros( tsteps, self.batch_size, self.n_neurons).to(dtype=self.dtype, device=self.device)   #.to(self.device)
         cursor0 = torch.zeros( tsteps, self.batch_size, self.n_outputs).to(dtype=self.dtype, device=self.device)   #.to(self.device)
         for tm in range( tsteps ):
 
-            x1,r1 = self.f_step(stim[tm],x1,r1,erri)                    # run batch in parallel
+            x1,r1 = self.f_step(stim[tm],x1,r1,erri,noisex[tm])         # run batch in parallel
             
             hidden0[tm] = r1
             velocity = self.readout(hidden0[tm])                        # velocity readout in cm/s

@@ -154,6 +154,7 @@ if __name__ == "__main__":
     parser.add_argument('-idx', '--index', type=int, default=1, help='CUDA device index') 
     parser.add_argument('-recsig','--sig_rec_0', type=float, default=1, help='Sigma of recurrent weight distribution')
     parser.add_argument('-sign','--sigma_n', type=float, default=0.0, help='activity noise sigma')
+    parser.add_argument('-pos', '--decode_p', type=int, default=0, help='Use position decoder')
     args = parser.parse_args()
     
 
