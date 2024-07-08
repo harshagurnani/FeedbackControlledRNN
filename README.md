@@ -68,7 +68,7 @@ $ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -nf 1 -ntr 3 -t
 ```
 OR Train via weight perturbation (`-twp`):
 ```
-$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -twp 1 
+$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -twp 1  -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 
 ```
 
 **Example 2:** Train OMPs
@@ -76,10 +76,10 @@ $ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -nf 1 -ntr 3 -t
 Loads `omp_tested_movepc_PC8.npy` from [omp/relu_](/wmp/relu_/), uses 1 model file from it, trains recurrent weights (`-rec`) for 3 maps, and saves it in [omp/relu_/Model_XX_movePC_PC8/trained_trainInp200/](/omp/relu_/Model_6_movePC_PC8/):
 (Training recurrent weights automatically turns off input weights)
 ```
-$ python scripts/batch_train_perturbation.py -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -map 'omp' -rec 1
+$ python scripts/batch_train_perturbation.py -map 'omp' -rec 1 -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
 ```
 OR for a 2-layer feedback controller, train controller output layer:
 (Training controller module automatically turns off feedback weights but NOT feedforward weights)
 ```
-$ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/' -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -map 'omp' -fbout 1
+$ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/' -map 'omp' -fbout 1 -sf2 '_trainFbOut200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -map 'omp' -fbout 1
 ```
