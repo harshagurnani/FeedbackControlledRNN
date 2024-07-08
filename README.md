@@ -11,7 +11,7 @@ Tested with Python 3.9.6 and Python 3.10.12
 For details, look at:
 - [Model construction](#model-construction)
 - [Generating perturbed decoders](#generate-and-filter-perturbed-maps)
-
+- [Retraining weights for adaptation to perturbed decoders](#adaptation-with-perturbed-decoders)
 
 ## Model construction
 To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [use_models/](/use_models)
