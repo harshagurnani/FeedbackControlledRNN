@@ -254,7 +254,7 @@ def get_perturb_params( init_p=None ):
     params['wmp.nList_sub'] = 100
     params['wmp.theta_wout'] = [20,75]      # angle with intuitive decoder: in degrees
     params['wmp.ratio_lim'] = [0.3, 3]      # ratio of open loop velocities wrt intuitive decoder
-    params['wmp.velAngle'] = [20,90]        # angular diff in vel per target (acceptable range)
+    params['wmp.velAngle'] = [20,80]        # angular diff in vel per target (acceptable range)
 
     params['wmp.closedloopv'] = [1,5]       # not a ratio
 

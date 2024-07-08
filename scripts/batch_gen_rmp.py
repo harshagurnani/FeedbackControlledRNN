@@ -2,12 +2,15 @@ import numpy as np
 import os
 import sys
 import inspect
+from pathlib import Path
 import argparse
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parentdir=parentdir+'/'
-sys.path.insert(0, parentdir) 
-
+if '/scripts' in currentdir[-10:]:
+    parentdir = os.path.dirname(currentdir)
+    parentdir=parentdir+'/'
+    sys.path.insert(0, parentdir) 
+else:
+    parentdir=currentdir
 
 import torch
 import tools.run_network_ as rnet
@@ -32,8 +35,11 @@ def sweep_rmp(loadname='use_models/relu_', savfolder='rmp/relu_', n1files=None, 
     nf = min(nf,maxfiles)
     n1files = n1files[0:nf]
 
-    if not os.path.exists(savfolder):
-        os.mkdir(savfolder)
+    savfolder = parentdir+savfolder
+    tpath = Path(savfolder)
+    tpath.mkdir(parents=True, exist_ok=True)
+    #if not os.path.exists(savfolder):
+    #    os.mkdir(savfolder)
 
 
     use_tm = np.arange(start=tm_range[0], stop=tm_range[1])

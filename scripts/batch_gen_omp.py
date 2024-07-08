@@ -1,12 +1,16 @@
 import numpy as np
 import os
 import sys
+from pathlib import Path
 import inspect
 import argparse
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-parentdir=parentdir+'/'
-sys.path.insert(0, parentdir) 
+if '/scripts' in currentdir[-10:]:
+    parentdir = os.path.dirname(currentdir)
+    parentdir=parentdir+'/'
+    sys.path.insert(0, parentdir) 
+else:
+    parentdir=currentdir
 
 
 import torch
@@ -33,8 +37,10 @@ def sweep_omp(loadname='use_models/relu_', savfolder='/omp/relu_/', n1files=None
     n1files = n1files[0:nf]
 
     savfolder = parentdir+savfolder
-    if not os.path.exists(savfolder):
-        os.mkdir(savfolder)
+    tpath = Path(savfolder)
+    tpath.mkdir(parents=True, exist_ok=True)
+    #if not os.path.exists(savfolder):
+    #    os.mkdir(savfolder)
 
 
     use_tm = np.arange(start=tm_range[0], stop=tm_range[1])
