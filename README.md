@@ -81,5 +81,5 @@ $ python scripts/batch_train_perturbation.py -sf2 '_trainRec200' -nf 1 -ntr 3 -t
 OR for a 2-layer feedback controller, train controller output layer:
 (Training controller module automatically turns off feedback weights but NOT feedforward weights)
 ```
-$ python scripts/batch_train_perturbation.py -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -map 'omp' -fbout 1
+$ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/' -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -map 'omp' -fbout 1
 ```
