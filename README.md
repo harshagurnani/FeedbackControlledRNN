@@ -9,7 +9,7 @@ For details, look at:
 
 
 ## Model construction
-To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [/use_models/](/use_models)
+To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [use_models/](/use_models)
 
 **Example 1:** Simple velocity decoder
 ```
@@ -30,7 +30,16 @@ $ python batch_create_network.py -F 'percp_expansion_/' -nf 2 -te 450 -pe 250 -l
 ## Generate and filter perturbed maps
 Decide which models to use (follow [model construction](#model-construction) first), specify the dimensionality of the intrinsic manifold, and optionally specify conditions for filtering perturbed decoders:
 
-Results are in [/wmp/](/wmp/), [/omp/](/omp/) or [/rmp/](/rmp/). Each model file will have its own folder with filtered WMPs saved in `WMP_maps.npy` and the combined results will be in `xmp_tested_movepc_PCK.npy` where `xmp` is wmp, omp or rmp, and `PCK` specifies the intrinsic manifold dimensionality K.
+Results are in [wmp/](/wmp/), [omp/](/omp/) or [rmp/](/rmp/). Each model file will have its own folder with filtered WMPs saved in `WMP_maps.npy` and the combined results will be in `xmp_tested_movepc_PCK.npy` where `xmp` is wmp, omp or rmp, and `PCK` specifies the intrinsic manifold dimensionality K.
 
 **Example 1:** Generate Within-Manifold decoders
+Manifold dimensionality = 8, search over 1000 WMPs:
+```
+$ python scripts/batch_gen_wmp.py -pc 8 -nlist 1000
+```
 
+**Example 2:** Generate Outside-Manifold decoders
+Manifold dimensionality = 8, search over 1000 OMPs, open loop velocity between 0.3x-1.5x:
+```
+$ python scripts/batch_gen_omp.py -pc 8 -nlist 1000 -ratio0 0.3 -ratio1 1.5
+```
