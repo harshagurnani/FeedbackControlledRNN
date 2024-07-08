@@ -264,7 +264,7 @@ def get_perturb_params( init_p=None ):
     params['omp.nList_sub'] = 100
     params['omp.theta_wout'] = [20,85]      # angle with intuitive decoder: in degrees
     params['omp.ratio_lim'] = [0.3, 3]      # ratio of open loop velocities wrt intuitive decoder
-    params['omp.velAngle'] = [20,90]        # angular diff in vel per target (acceptable range)
+    params['omp.velAngle'] = [20,80]        # angular diff in vel per target (acceptable range)
 
     params['omp.closedloopv'] = [0.3,5]     
 

@@ -128,7 +128,7 @@ if __name__ == "__main__":
     parser.add_argument('-sign', '--sigma_n', type=float, default=0.0, help='Activity noise sigma') 
     parser.add_argument('-nf', '--nfiles', type=int, default=5, help='Max number of model files to use') 
     parser.add_argument('-idx', '--index', type=int, default=1, help='CUDA device index') 
-    parser.add_argument('-pc', '--nPC_fit', type=int, default=7, help='Number of PCs to use for dim reduction for inuitive decoder')#metavar='pc',     
+    parser.add_argument('-pc', '--nPC_fit', type=int, default=8, help='Number of PCs to use for dim reduction for inuitive decoder')#metavar='pc',     
     parser.add_argument('-tF', '--fit_maxT', type=int, default=1000, help='Sim time to calculate PCs') 
     parser.add_argument('-tM', '--test_maxT', type=int, default=1500, help='Sim time to test model') 
     parser.add_argument('-nlist', '--nList_sub', type=int, default=5000, help='Max number of random WMPs to check') 

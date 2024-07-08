@@ -158,6 +158,7 @@ class postModel( mainModel ):
 
 
     def generate_wmps( self, intuitive=None, wout=None, LinModel=None, PCRes=None, nPerms=3, ch_params={} ):
+        ''' Generate WMP and filter based on open-loop predictions '''
 
         # check if using pre-saved map
         if intuitive is None:
@@ -169,6 +170,7 @@ class postModel( mainModel ):
         if wout is None:
             wout = intuitive['wout']
         
+        # parameters of WMP perturbation
         p = get_perturb_params( self.params )
         p['wmp.nPerms'] = nPerms
         for key,val in ch_params.items():
@@ -191,7 +193,7 @@ class postModel( mainModel ):
         dic = self.test_model( tdata=tdata )
         X = dic['res']['activity1']
         stim = dic['res']['stimulus']
-        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_wmp_openloopv( X=X, wout0=wout, maps=use_maps[:cid], lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['wmp.ratio_lim'], stim=stim, limA=[20,80]  )
+        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_wmp_openloopv( X=X, wout0=wout, maps=use_maps[:cid], lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['wmp.ratio_lim'], stim=stim, limA=p['wmp.velAngle']  )
 
 
         return check_a, speed_check, angle_check_mean, angle_check_med, list_perturb, use_maps, ratio
@@ -234,6 +236,8 @@ class postModel( mainModel ):
 
 
     def post_filter_wmp( self, intuitive=None, LinModel=None, PCRes=None, use_maps=None, list_perm=None, ch_params={}, plot_num=10, savpath=None, get_perf=False, maptype='wmp', neuron_gps=None, use_vratio=False ):
+        ''' Filter decoders (WMP/OMP/RMP) based on closed-loop performance '''
+        
         if intuitive is None:
             intuitive = self.intuitive
         if LinModel is None:
@@ -314,7 +318,7 @@ class postModel( mainModel ):
                 perfrate[map,:] = np.array([perfres['min_rdist'], perfres['success'], perfres['traj_error'], np.median(perfres['acq_time'])])
                 doperf = (perfres['success']>0.2) and (perfres['success']<0.8)
             
-            if keepv and (np.random.random()>0.1) and (plot_done<nplot) and (doperf) :
+            if keepv and (np.random.random()<0.1) and (plot_done<nplot) and (doperf) :
                 print('Plotting with closedloop v= '+np.str_(all_v[map]))
                 self.plot_model_results(dic, savname=savpath+maptype+'_'+np.str_(map)+'_PC8_') # HAS MODEL SUFFIX
                 plot_done +=1 
@@ -329,6 +333,7 @@ class postModel( mainModel ):
         
 
     def generate_omps( self, intuitive=None, wout=None, LinModel=None, PCRes=None, nPerms=3, ch_params={} ):
+        ''' Generate OMPs and filter based on open-loop predictions '''
 
         # check if using pre-saved map
         if intuitive is None:
@@ -367,13 +372,14 @@ class postModel( mainModel ):
         use_maps = ranks[check_a]       # only those within angle range
         cid = min( len(use_maps), p['omp.nList_sub'] )
 
-        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_map_openloopv( X=X, wout0=wout, maps=use_maps[:cid], lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['omp.ratio_lim'], stim=stim, limA=[20,80] , mapgen='omp', neuron_gps=allgps )
+        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_map_openloopv( X=X, wout0=wout, maps=use_maps[:cid], lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['omp.ratio_lim'], stim=stim, limA=p['omp.velAngle'] , mapgen='omp', neuron_gps=allgps )
 
 
         return check_a, speed_check, angle_check_mean, angle_check_med, list_perturb, use_maps, ratio
     
 
     def generate_random_decoders( self, intuitive=None, wout=None, LinModel=None, PCRes=None, nPerms=3, ch_params={} ):
+        ''' Generate RMPs and filter based on open-loop predictions '''
 
         # check if using pre-saved map
         if intuitive is None:
@@ -410,7 +416,7 @@ class postModel( mainModel ):
         cid = min( len(use_maps), p['wmp.nList_sub'] )
         use_maps = [use_maps[jj] for jj in range(cid)]
 
-        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_map_openloopv( X=X, wout0=wout, maps=use_maps, lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['wmp.ratio_lim'], stim=stim, limA=[20,80] , mapgen='rmp' )
+        speed_check, angle_check_mean, angle_check_med, ratio = wpert.select_map_openloopv( X=X, wout0=wout, maps=use_maps, lin_coef=LinModel.coef_, U=PCRes.components_, use_p=True, p=list_perturb, ratio_lim=p['wmp.ratio_lim'], stim=stim, limA=p['wmp.velAngle'] , mapgen='rmp' )
 
 
         return check_a, speed_check, angle_check_mean, angle_check_med, list_perturb, use_maps, ratio

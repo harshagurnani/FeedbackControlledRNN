@@ -30,7 +30,7 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
         else:
             device = torch.device('cpu')
 
-    params = {'nPC':7, 'ntrain':10, 'nReps':1, 'cv_range':[1,5], 'success_range':[0.2,0.7]}
+    params = {'nPC':8, 'ntrain':10, 'nReps':1, 'cv_range':[1,5], 'success_range':[0.2,0.7]}
     params.update( pert_params )
 
     ntrain = params['ntrain']
@@ -108,7 +108,6 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
     orig_p = newExp.model.save_parameters()
     orig_p['W_out_0'] = wout_base
 
-    ######### DID NOT LOAD THE NEW DECODER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     newExp.model.load_parameters(orig_p)
 
 
@@ -242,6 +241,8 @@ def analyze_training( wmp_train, trained=True, dic_orig={}, thresh=0.15 ):
     - Magnitude of activity pre- and post- training
     - (To do) normalized change in wts
     - Top PCs
+
+    OLD CODE _---------- These stats are not used anymore
     '''
     #{'map_id':map_id, 'file':file, 'rep': rep, 'idx':permid, 'wout':wout, 'intuitive':intuitive, 'wout_intuit':wout_intuit, 'pretrain':dic, 'posttrain':tdic , 'wfinal':wfinal }
 
