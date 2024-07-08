@@ -1,12 +1,16 @@
 # FeedbackControlledRNN
-Code to simulate BCI task and adaptation in feedback-controlled RNNs. Accompanies the following [preprint](https://doi.org/10.1101/2024.05.24.595772):
+Code to simulate BCI task and adaptation in feedback-controlled RNNs. 
+Tested with Python 3.9.6 and Python 3.10.12
+
+Accompanies the following [preprint](https://doi.org/10.1101/2024.05.24.595772):
 ```
 Feedback control of recurrent dynamics constrains learning timescales during motor adaptation. bioRxiv 2024.
 Harsha Gurnani, Weixuan Liu,  Bingni W. Brunton
 doi: https://doi.org/10.1101/2024.05.24.595772
 ```
 
-Tested with Python 3.9.6 and Python 3.10.12
+![image1](img/model.png)
+
 
 For details, look at:
 - [Model construction](#model-construction)
