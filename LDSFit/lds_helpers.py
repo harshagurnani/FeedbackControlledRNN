@@ -8,6 +8,7 @@ import sys
 import inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)+'/'
+plotdir = parentdir+'saved_plots/'
 sys.path.insert(0, parentdir) 
 
 import tools.perturb_network_ as pnet
@@ -19,15 +20,18 @@ import torch.optim as optim
 import LDSFit.fit_model as fm
 
 
-def generate_data( file, usetm=None, trialAvg=True, device='cpu' ):
+def generate_data( file, usetm=None, trialAvg=True, device='cpu', noPrep=False, fbk=True  ):
     '''load model, run the model and reorganize into training data'''
 
     if trialAvg:
         delays=[100,101]
     else:
         delays=[100,200]
+    if noPrep:
+        delays=[20,21]
+        usetm = np.arange( start=30, stop=600)
 
-    rnn = pnet.postModel(file, {'jump_amp':0.01, 'delays':delays, 'device':device})
+    rnn = pnet.postModel(file, {'jump_amp':0.0, 'delays':delays, 'device':device})
     rnn.load_rnn()
 
     dic = rnn.test_model()      # numpy
@@ -39,7 +43,10 @@ def generate_data( file, usetm=None, trialAvg=True, device='cpu' ):
 
     # reshape into time x batch x n
     xt = np.swapaxes(X,0,1)
-    ut = np.concatenate( (stim, error), axis=2 )
+    if fbk:
+        ut = np.concatenate( (stim, error), axis=2 )
+    else:
+        ut = stim.copy()
     ut = np.swapaxes(ut,0,1) 
 
     # Restrict time?
@@ -87,6 +94,7 @@ def make_model( ut, nz=3, nx=10, ni=5, A_sigma=0.5, C_sigma=0.1, B_sigma=0.5, x0
     if doplot:
         pp.figure()
         pp.plot(xg[:,1,:20].cpu().detach().numpy())
+        pp.savefig(plotdir+'init_activity.png')
         pp.close()
     
     return model
@@ -133,13 +141,15 @@ def training_schedule( model, criterion, all_ut, all_xt,
     return loss
 
 
-def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b=30, maxe2b=30, model=None, C_sigma=0.1, d_sigma=0.1, device='cpu', nonlinearity='relu') :
+def analyse_file_CV_2( file,  noPrep=False, fbk=True, 
+                       train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b=30, maxe2b=30, 
+                       model=None, C_sigma=0.1, d_sigma=0.1, device='cpu', nonlinearity='relu') :
     
-    all_ut, all_xt = generate_data( file, device=device )
+    all_ut, all_xt = generate_data( file, device=device, noPrep=noPrep, fbk=fbk )
 
     tm, batch, nx = all_xt.shape
     np.random.seed()
-    ptrain = np.random.random(nx)
+    ptrain = np.random.random(nx)       # which neurons to train
     trainx = all_xt[:,:,ptrain<=train_frac]
     testx = all_xt[:,:,ptrain>train_frac]
 
@@ -147,6 +157,9 @@ def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b
     testid = ptrain>train_frac
     print(np.where(testid)[0])
 
+    ###################################################
+    # STEP 1 : Train dynamics A, B, x0, and obs C, d on all trials and training neurons.
+    ###################################################
     # Make model with nx=trainx
     ni=all_ut.shape[2]
     model = make_model( all_ut, nz=nz, ni=ni, nx=trainx.shape[2], nonlinearity=nonlinearity , batch=all_ut.shape[1], device=device)
@@ -162,6 +175,9 @@ def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b
     d=torch.randn(size=(1,nx), device=device) *d_sigma
     d[:, trainid] = model.d.detach()
 
+    ###################################################
+    # STEP 2 : Fix A, B, x0, and train obs C, d on training trials and all neurons. (fit C,d for test neurons)
+    ###################################################
     ### traintrials
     ntr = all_ut.shape[1]
     traintrials = np.random.choice( ntr, np.int_(np.round(0.8*ntr)), replace=False )
@@ -172,17 +188,21 @@ def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b
     x0=model.x0.detach()
     use_x0 = x0[:,traintrials,:]
 
-    #model_full = make_model( all_ut, nz=nz, ni=ni, nx=nx, nonlinearity=nonlinearity , batch=all_ut.shape[1], C0=C, d0=d, A0=model.A.detach(), B0=model.B.detach(), x0=model.x0.detach(), device=device)
+    # Fix dynamics
     model_full = make_model( use_ut, nz=nz, ni=ni, nx=nx, nonlinearity=nonlinearity , batch=use_ut.shape[1], C0=C, d0=d, A0=model.A.detach(), B0=model.B.detach(), x0=use_x0, device=device)
     model_full.A.requires_grad = False
     model_full.B.requires_grad = False
     model_full.x0.requires_grad = False
 
     # retrain on C, x0, d:
-    #loss_full = training_schedule( model_full, criterion, all_ut, all_xt, epoch1=maxe1b, lr1=0.01, epoch2=maxe2b, lr2=0.005, device=device)
     loss_full = training_schedule( model_full, criterion, use_ut, use_xt, epoch1=maxe1b, lr1=0.01, epoch2=maxe2b, lr2=0.005, device=device)
 
-    z_orig, x_orig = model(all_ut, dt=0.1)
+    ###################################################
+    # STEP 3 : Compute loss on test trials and test neurons
+    ###################################################
+    
+
+    z_orig, x_orig = model(all_ut, dt=0.1)  # estimate dynamics from original model
     x_pred = torch.relu(z_orig @ model_full.C + model_full.d)
     x_test_pred = x_pred[:,:,testid].cpu().detach().numpy()
     x_test_orig = all_xt[:,:,testid].cpu().numpy()
@@ -195,6 +215,7 @@ def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b
     cev = 1 - np.sum(np.var(error, axis=0))/np.sum(np.var(den,axis=0))
 
     ## Post-training:
+    # Re-run full model
     model_full2 = make_model( all_ut, nz=nz, ni=ni, nx=nx, nonlinearity=nonlinearity , batch=all_ut.shape[1], 
                              C0=model_full.C.detach(), d0=model_full.d.detach(), A0=model.A.detach(), B0=model.B.detach(), x0=x0, device=device)
     zg,xg=model_full2(all_ut, dt=0.1)
@@ -206,7 +227,7 @@ def analyse_file_CV_2( file, train_frac=0.9, nz=6, maxe1a=30 , maxe2a=30, maxe1b
     pp.figure(figsize=(14,4))
     pp.plot(xg_test, color='k')
     pp.plot(xt_test, color='r')
-    pp.savefig('testneu_activity.png')
+    pp.savefig(plotdir+'testneu_activity.png')
     pp.close()
 
     return loss_full, model_full, all_ut, all_xt, cev

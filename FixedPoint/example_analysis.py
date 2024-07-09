@@ -1,3 +1,12 @@
+
+from pathlib import Path
+import sys, os
+homedir = str(Path(__file__).resolve().parent.parent)
+os.chdir(homedir)
+sys.path.append(homedir)
+
+######################################################
+
 import torch
 import torch.nn as nn
 import numpy as np
@@ -20,7 +29,11 @@ cm = mpl.colormaps[cmap]
 ######################################################
 # GLOBAL SETTINGS
 ######################################################
-
+sv= homedir + '/use_models/relu_/'
+fn='tau5__with_training_seed_6.npy'
+plotdir =  homedir + '/saved_plots/'
+if not os.path.exists(plotdir):
+    os.makedirs(plotdir)
 
 dtype=torch.FloatTensor
 if torch.cuda.is_available():
@@ -29,8 +42,6 @@ else:
     device = torch.device('cpu')
 
 # load model data
-sv='use_models/relu_/'
-fn='tau5__with_training_seed_6.npy'
 oldm= np.load(sv+fn,allow_pickle=True).item()
 
 pmodel = pn.postModel( sv+fn, {'jump_amp':0.0})
@@ -89,9 +100,9 @@ maxev=max(np.real(evs))
 
 W_out = oldm['params1']['W_out_0']
 # angles with readout directions
-angle_w_cue = np.rad2deg( ll.subspace_angles(jaci[:,:2], W_out) )
-angle_w_hold = np.rad2deg( ll.subspace_angles(jaci[:,2:3], W_out) )
-angle_w_fb = np.rad2deg( ll.subspace_angles(jaci[:,3:], W_out) )
+#angle_w_cue = np.rad2deg( ll.subspace_angles(jaci[:,:2], W_out) )
+#angle_w_hold = np.rad2deg( ll.subspace_angles(jaci[:,2:3], W_out) )
+#angle_w_fb = np.rad2deg( ll.subspace_angles(jaci[:,3:], W_out) )
 
 
 # go period (go-input is ON)
@@ -182,17 +193,19 @@ for jj in range(n_reps):
 ax.view_init(80, 30)
 pp.xlabel('PC1')
 pp.ylabel('PC2')
-pp.savefig('fps_prep.png')
+pp.savefig(plotdir+'fps_prep.png')
+ax.view_init(10, 30)
+pp.savefig(plotdir+'fps_prep_view2.png')
 pp.close(fig)
 
 # --------
 
 # angles with prep FP subsace
-prep_sub = px.components_
+#prep_sub = px.components_
 
-angle_w_cue = np.rad2deg( ll.subspace_angles(jaci[:,:2], prep_sub.T) )
-angle_w_hold = np.rad2deg( ll.subspace_angles(jaci[:,2:3], prep_sub.T) )
-angle_w_fb = np.rad2deg( ll.subspace_angles(jaci[:,3:], prep_sub.T) )
+#angle_w_cue = np.rad2deg( ll.subspace_angles(jaci[:,:2], prep_sub.T) )
+#angle_w_hold = np.rad2deg( ll.subspace_angles(jaci[:,2:3], prep_sub.T) )
+#angle_w_fb = np.rad2deg( ll.subspace_angles(jaci[:,3:], prep_sub.T) )
 
 
 
@@ -275,7 +288,9 @@ for jj in range(n_reps):
 ax.view_init(80, 30)
 pp.xlabel('PC1')
 pp.ylabel('PC2')
-pp.savefig('fps_move.png')
+pp.savefig(plotdir+'fps_move.png')
+ax.view_init(10, 30)
+pp.savefig(plotdir+'fps_move_view2.png')
 pp.close(fig)
 
 fp_pos = all_fps_pos.detach().numpy()
@@ -286,8 +301,8 @@ for jj in range(n_reps):
 pp.ylim([0,2*np.pi])
 pp.xlabel('Theta')
 pp.ylabel('FPS angle (rad)')
-pp.savefig('fps_angle_move.png')
-
+pp.savefig(plotdir+'fps_angle_move.png')
+pp.close(f2)
 
 
 
@@ -353,4 +368,7 @@ for jj in range(n_reps):
 pp.xlabel('PC1')
 pp.ylabel('PC2')
 ax.view_init(80, 30)
-pp.savefig('fps_hold_varied.png')
+pp.savefig(plotdir+'fps_hold_varied.png')
+ax.view_init(10, 30)
+pp.savefig(plotdir+'fps_hold_varied_view2.png')
+pp.close(fig)
