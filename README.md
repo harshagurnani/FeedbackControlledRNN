@@ -79,7 +79,7 @@ $ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -twp 1  -nf 1 -
 
 **Example 2:** Train OMPs
 
-Loads `omp_tested_movepc_PC8.npy` from [omp/relu_](/wmp/relu_/), uses 1 model file from it, trains recurrent weights (`-rec`) for 3 maps, and saves it in [omp/relu_/Model_XX_movePC_PC8/trained_trainInp200/](/omp/relu_/Model_6_movePC_PC8/):
+Loads `omp_tested_movepc_PC8.npy` from [omp/relu_](/wmp/relu_/), uses 1 model file from it, trains recurrent weights (`-rec`) for 3 maps, and saves it in [omp/relu_/Model_XX_movePC_PC8/trained_trainRec200/](/omp/relu_/Model_6_movePC_PC8/):
 (Training recurrent weights automatically turns off input weights)
 ```
 $ python scripts/batch_train_perturbation.py -map 'omp' -file 'omp_tested_movepc_PC8.npy' -rec 1 -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
