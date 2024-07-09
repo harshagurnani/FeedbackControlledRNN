@@ -72,17 +72,17 @@ input_fb = torch.Tensor( input_signal_tgt ).type(dtype)
 hiddenx = ((torch.rand(1, n_hid)-0.5)*0.1).type(dtype)
 hiddenp = ((torch.rand(1, n_out)-0.5)*0.1).type(dtype)
 
+# get fixed point
 fixed_point1, fixed_point1_pos, _ = analyzer2.find_fixed_point(hiddenx.to(device), hiddenp.to(device), input_ff.to(device), input_fb.to(device) ,view=True)
 
+# check one timestep forward
 new_fb_input = fixed_point1_pos - input_fb
 v1, z1,r1 = model(input_ff.to(device), new_fb_input.to(device), fixed_point1)
 v2, z2,r2 = model(input_ff.to(device), new_fb_input.to(device), z1)
 
 # for stability analysis, we get the entire jacobian matrix and then we can use eigendecomposition to see if there are any positive real eigenvalues
-
 jaci = analyzer2.calc_input_jacobian( fixed_point1, fixed_point1_pos, input_ff[0,:], input_fb[0,:] )
 jac = analyzer2.calc_hiddenx_jacobian( fixed_point1, fixed_point1_pos, input_ff[0,:], input_fb[0,:] )
-
 [evs,v]=ll.eig(jac)
 maxev=max(np.real(evs))
 
@@ -300,7 +300,7 @@ hold_inp = [0,0.1,0.2,0.3,0.4,0.5]
 n_go = len(hold_inp)
 n_reps = n_go
 
-all_theta = np.linspace(start=0,stop=2*np.pi,num=5)
+all_theta = np.linspace(start=0,stop=2*np.pi,num=37)
 all_theta = all_theta[:-1]
 ntheta = len(all_theta)
 
@@ -320,8 +320,8 @@ for jj in range(ntheta):
         input_signal[:,2] = hold_inp[ctr] #0.5# hold
         input_ff = torch.Tensor( input_signal ).type(dtype)
         input_tgt = np.zeros((1,n_out))
-        input_tgt[:,0] = np.cos(theta)*hold_inp[ctr]
-        input_tgt[:,1] = np.sin(theta)*hold_inp[ctr]
+        input_tgt[:,0] = np.cos(theta)*hold_inp[ctr]*2
+        input_tgt[:,1] = np.sin(theta)*hold_inp[ctr]*2
         input_tgt = torch.Tensor( input_tgt ).type(dtype)   
         result_ok = False
         print('Theta = ' + np.str_(np.int_(theta/np.pi*180)) + ', ctr = '+ np.str_(ctr) )
@@ -348,7 +348,7 @@ Zz_H = np.reshape( Zz_H, (n_reps, ntheta, nPC) )
 fig=pp.figure()
 ax=fig.add_subplot(projection='3d')
 for jj in range(n_reps):
-    ax.scatter(Zz_H[jj,:,0], Zz_H[jj,:,1], Zz_H[jj,:,2], color=cm(all_theta/(2*np.pi)), s=jj*10+10, alpha=0.5)
+    ax.scatter(Zz_H[jj,:,0], Zz_H[jj,:,1], Zz_H[jj,:,3], color=cm(all_theta/(2*np.pi)), s=jj*10+10, alpha=0.5)
 
 pp.xlabel('PC1')
 pp.ylabel('PC2')
