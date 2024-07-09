@@ -100,3 +100,9 @@ fa.analyse_all_files(plot_type='t20', suffix='allfiles')
 fa.analyse_all_files(plot_type='vpeak', suffix='allfiles')
 fa.analyse_all_files(plot_type='error', suffix='allfiles')
 ```
+
+### Fixed points of Joint RNN-Cursor System
+Look at [FixedPoint](/FixedPoint/) folder. 
+```
+$ python FixedPoint/example_analysis.py
+```
