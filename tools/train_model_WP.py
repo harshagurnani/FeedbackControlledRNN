@@ -3,8 +3,13 @@ import os
 import sys
 import inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir) 
+if '/scripts' in currentdir[-10:]:
+    parentdir = os.path.dirname(currentdir)
+    parentdir=parentdir+'/'
+    sys.path.insert(0, parentdir) 
+else:
+    parentdir=currentdir
+
 
 
 import torch
@@ -63,7 +68,7 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
     newExp.load_rnn()
     seed = newExp.simparams['rand_seed']
     n1 = newExp.simparams['n1']
-    adapt_p.update({ 'n1':n1, 'alpha1':5e-2/n1, 'alpha2':5e-2/n1, 'gamma1':5e-2/n1, 'gamma2':5e-2/n1,  'beta1':0.01,'beta2':0.01})
+    adapt_p.update({ 'model_type':newExp.simparams['model_type'], 'n1':n1, 'alpha1':5e-2/n1, 'alpha2':5e-2/n1, 'gamma1':5e-2/n1, 'gamma2':5e-2/n1,  'beta1':0.01,'beta2':0.01})
     adapt_p.update(adaptparams)
     newExp.params.update(adapt_p)
     newExp.reset_training_params(adapt_p)

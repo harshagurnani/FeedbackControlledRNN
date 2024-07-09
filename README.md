@@ -88,3 +88,15 @@ OR for a 2-layer feedback controller, train controller output layer:
 ```
 $ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp' -fbout 1 -file 'omp_tested_movepc_PC8.npy' -sf2 '_trainFbOut200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
 ```
+
+## RNN Analysis
+
+### Dynamics of error correction
+Look at `tools/feedback_analysis.py`. Generates graphs for each plot_type, or for many scales.
+```
+import tools.feedback_analysis as fa
+fa.analyse_all_files( scale=[0.1,0.3,0.5,0.8,1.0], suffix='allfiles' )
+fa.analyse_all_files(plot_type='t20', suffix='allfiles')
+fa.analyse_all_files(plot_type='vpeak', suffix='allfiles')
+fa.analyse_all_files(plot_type='error', suffix='allfiles')
+```

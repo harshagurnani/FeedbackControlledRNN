@@ -18,8 +18,12 @@ import sys
 import inspect
 import argparse
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir) 
+if '/scripts' in currentdir[-10:]:
+    parentdir = os.path.dirname(currentdir)
+    parentdir=parentdir+'/'
+    sys.path.insert(0, parentdir) 
+else:
+    parentdir=currentdir
 
 import torch
 import tools.run_network_ as rnet
@@ -244,3 +248,5 @@ if __name__ == "__main__":
 
         dic = network.test_model(dic)
         network.plot_model_results( dic )
+
+
