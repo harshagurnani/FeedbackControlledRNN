@@ -107,3 +107,12 @@ Look at [FixedPoint](/FixedPoint/) folder.
 ```
 $ python FixedPoint/example_analysis.py
 ```
+
+### Latent dynamics of RNN
+Look at [LDSFit](/LDSFit/) folder. Edit options within the files if you want such as:
+- dimensions of latent space (`allz`)
+- min performance of analyzed fits for rotational dynamics (`min_cev`)
+- how many iters to fit (`iters`)
+```
+$ python LDSFit/batch_analyse_relu_cv.py
+```
