@@ -178,6 +178,8 @@ def analyse_all_files( files=None, suffix='', plot_type='vpeak', nt=21, ntgt=13 
                     for jj in range(ntgt):
                         pp.scatter( test_angles, np.mod( 4*np.pi + av[tt,:,jj]  , 2*np.pi), color=cm(tt/20), s=10, alpha=0.2) #- test_angles
                 pp.ylim([-.1,2*np.pi+.1])
+                pp.xlabel('angular error')
+                pp.ylabel('angular delta velocity')
                 pp.savefig('delv_'+suffix+'.png')
 
             elif plot_type=='vpeak':
@@ -186,6 +188,8 @@ def analyse_all_files( files=None, suffix='', plot_type='vpeak', nt=21, ntgt=13 
                         ix = np.argmax( vnorm[:,aa,jj] )
                         pp.scatter( test_angles[aa], np.mod( 4*np.pi + av[ix,aa,jj] , 2*np.pi), color=cm3(jj/ntgt), alpha=0.3 )
                 pp.ylim([-.1,2*np.pi+.1])
+                pp.xlabel('angular error')
+                pp.ylabel('angular delta velocity (tpeak)')
                 pp.savefig('delv_vpeak_'+suffix+'.png')
             
             ff+=1 
@@ -202,6 +206,8 @@ def analyse_all_files( files=None, suffix='', plot_type='vpeak', nt=21, ntgt=13 
                 yerr= std_error, 
                 color='r', lw=3, alpha=0.5)
             pp.yticks(np.linspace(np.pi/4,3*np.pi/2,11))
+            pp.xlabel('time')
+            pp.ylabel('angular velocity - target')
             pp.savefig('delv_error_'+suffix+'.png')
 
 
@@ -252,6 +258,8 @@ def analyse_all_files( files=None, suffix='', plot_type='vpeak', nt=21, ntgt=13 
             yerr=np.median( np.std( np.mean(all_vnorm,axis=2),axis=2),axis=0)
             pp.errorbar( x=np.arange(ntm), y=y, yerr = yerr, color=cm2(sc), lw=sc)
 
+        pp.xlabel('time')
+        pp.ylabel('velocity norm')
         for sc in scale:  
             pp.plot([0],[0],c=cm2(sc), label='s='+np.str_(sc))        
         pp.legend()
