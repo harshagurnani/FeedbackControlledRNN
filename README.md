@@ -17,6 +17,7 @@ For details, look at:
 - [Model construction](#model-construction)
 - [Generating perturbed decoders](#generate-and-filter-perturbed-maps)
 - [Retraining weights for adaptation to perturbed decoders](#adaptation-with-perturbed-decoders)
+- [Analysis of RNN dynamics](#rnn-analysis)
 
 ## Model construction
 To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [use_models/](/use_models)
