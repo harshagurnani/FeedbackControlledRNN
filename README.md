@@ -11,6 +11,7 @@ doi: https://doi.org/10.1101/2024.05.24.595772
 ```
 
 ![image1](img/model.png)
+![image1](img/module_info.jpeg)
 
 
 For details, look at:
