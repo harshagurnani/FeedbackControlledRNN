@@ -96,7 +96,7 @@ def get_training_results( file='trained_wmp_round2_.npy', folder='wmp/relu_/Mode
     beta_fb = np.zeros((nMaps,1))                           # fb controllability of decoder
     beta_U_ff = np.zeros((nMaps,1))                         # ff controllability of intrinsic manifold
     beta_U_fb = np.zeros((nMaps,1))                         # fb controllability of intrinsic manifold
-    beta_bal = np.zeros((nMaps,1))                          # balanced truncation
+    beta_bal = np.ones((nMaps,1)) * 1e-3                         # balanced truncation
 
     dimVF = np.zeros((nMaps,1))                             # dimensionality of change in vector field
     fracVF = np.zeros((nMaps,1))                            # total fractional change in vector field
@@ -109,7 +109,7 @@ def get_training_results( file='trained_wmp_round2_.npy', folder='wmp/relu_/Mode
     SVF_tot = np.zeros((nMaps,1))
     SVF_angle = np.zeros((nMaps,1))
 
-
+    # variance along decoder
     fracTotalVel = np.zeros((nMaps,1))                      
     fracVar_orig = np.zeros((nMaps,1))
     fracVar_post = np.zeros((nMaps,1))
@@ -135,10 +135,10 @@ def get_training_results( file='trained_wmp_round2_.npy', folder='wmp/relu_/Mode
         wmp_train = train_res[map][0]       # first iteration of map
 
         # cursor progress and activity
-        if new_progress:
-            stats  = get_new_progress(wmp_train)
-            wmp_train['stats']['progress_pre'] = stats['progress_pre']
-            wmp_train['stats']['progress_post'] = stats['progress_post']
+        #if new_progress:
+        stats  = get_new_progress(wmp_train)
+        wmp_train['stats']['progress_pre'] = stats['progress_pre']
+        wmp_train['stats']['progress_post'] = stats['progress_post']
         progress_pre[map] = wmp_train['stats']['progress_pre']['total_m']
         progress_post[map] = wmp_train['stats']['progress_post']['total_m']
         progress_pre_in[map] = wmp_train['stats']['progress_pre']['inside_m']
@@ -212,7 +212,7 @@ def get_training_results( file='trained_wmp_round2_.npy', folder='wmp/relu_/Mode
         beta_U_fb[map] = np.abs(ctr_dic['ctrb_U_fb'])
         Fbk_overlap[map] = ctr_dic['Fbk_right_overlap']
         Out_overlap[map] = ctr_dic['Out_left_overlap']
-        beta_bal[map] = return_balanced_sv( wmp_train['posttrain']['params0'] )
+        #beta_bal[map] = return_balanced_sv( wmp_train['posttrain']['params0'] )
 
         # variance along dimensions
         expVar_pre[map] = mm.get_variance_in_U(X_pre, umap )
@@ -421,7 +421,8 @@ def return_gradient_info( wmp_train ):
     ntr = min(200, dim_fbk.shape[0])
     allcorr = np.zeros((ntr, nReps)) 
     allgrad = np.zeros((dim_fbk.shape[0], nReps)) 
-    
+    lc_headings = ['Loss', 'R_l0inp', 'R_l0rec', 'R_l0fbk', 'R_l0rate', 'ff_mod', 'fb_mod', 
+                   'dim_dw_fbk', 'corr_grad_inp', 'corr_grad_fbk', 'gradnorm', 'hit_rate']
     for rep in range(nReps):
         alldim[:,rep] = wmp_train[rep]['posttrain']['lc'][-1,-5]
         allcorr[:,rep] = wmp_train[rep]['posttrain']['lc'][:ntr,-3]  #wmp_train[rep]['posttrain']['lc'][:,-3]
@@ -434,7 +435,7 @@ def return_gradient_info( wmp_train ):
 
 
 def return_base_angle( file, wmp_train ):
-    ''' angle with original decoder '''
+    ''' angle with original decoder and activity with original decoder '''
     newExp = pnet.postModel( model_path=file, adapt_p={'train_inp' : False, 'train_rec': False, 'train_fbk':False} )
     newExp.load_rnn()
     newExp.restore_model()
@@ -456,7 +457,6 @@ def return_speed_loss( wmp_train_map, idx=-1, avg_window=20 ):
         allloss[:,rep]= wmp_train_map[rep]['posttrain']['lc'][:,idx]
     allloss = np.mean(allloss, axis=1)
 
-    # fit exponential in the future??
     res = mm.fit_exp( uniform_filter1d(allloss, size=avg_window) )
     speed =  res['speed']
     fitted_k = res['fitted_k']

@@ -34,7 +34,7 @@ def plot_progress( results, savfolder='', suffix='_test' ):
     pp.xticks([1,2,4,5], labels=['Total: Pre','Post','Inside: Pre','Post'])
     pp.ylabel('Progress towards target')
     pp.savefig(savfolder+'Progress_combined'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     pp.scatter(np.ones(len(results['p_total_target_pre']) ),results['p_total_target_pre'], c='r',alpha=0.3 )
@@ -43,7 +43,7 @@ def plot_progress( results, savfolder='', suffix='_test' ):
     pp.xticks([1,2],labels=['Pre-training', 'Post'])
     pp.ylabel('Progress towards target')
     pp.savefig(savfolder+'Progress_alltarget'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     return None
 
@@ -67,7 +67,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,5])
     pp.ylabel('Asymmetry of progress (across targets)')
     pp.savefig(savfolder+'Asymmetry_progress'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     #for jj in range(nMaps):
@@ -79,7 +79,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,1.05])
     pp.ylabel('Fractional variance within Original top PCs')
     pp.savefig(savfolder+'expVar'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     pp.scatter(np.ones((nMaps,1)), np.rad2deg(np.min(results['PC_angle_pre'], axis=-1)), c='r', alpha=0.3)
@@ -89,7 +89,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,90])
     pp.ylabel('Angle with Original top PCs')
     pp.savefig(savfolder+'minAngle_PCs'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     meanA_pre = np.rad2deg(np.arccos(np.nanmean(np.cos(results['PC_angle_pre']), axis=-1)))
@@ -101,7 +101,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,90])
     pp.ylabel('Mean angle with Original top PCs')
     pp.savefig(savfolder+'meanAngle_PCs'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
     pp.figure()
@@ -114,7 +114,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,1.05])
     pp.ylabel('Hit rate (within 0.1 of target)')
     pp.savefig(savfolder+'Hit_rate'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     for jj in range(nMaps):
@@ -126,7 +126,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,90])
     pp.ylabel('Angle_between_Out_Fbk')
     pp.savefig(savfolder+'theta_Out_Fbk'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
 
@@ -142,7 +142,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,90])
     pp.ylabel('Min Out angle with Rec amplification modes')
     pp.savefig(savfolder+'Out_amplified_angle'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     pp.figure()
     meanA_pre = results['theta_Fbk_Sensitive_pre']
@@ -157,7 +157,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylim([0,90])
     pp.ylabel('Min Fbk angle with Rec sensitivity modes')
     pp.savefig(savfolder+'Fbk_sensitive_angle'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     fig = pp.figure()
     ax = fig.add_subplot(111)
@@ -172,7 +172,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylabel('Count')
     pp.xlabel('Learning rate')
     pp.savefig(savfolder+'learning_k'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     fig = pp.figure()
     ax = fig.add_subplot(111)
@@ -181,7 +181,7 @@ def plot_all( results, savfolder='', suffix='_test' ):
     pp.ylabel('Count')
     pp.xlabel('Hit rate')
     pp.savefig(savfolder+'hitrate_hist_'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     return None
 
@@ -400,7 +400,7 @@ def plot_progress_2( results, *args, savfolder='', suffix='_test', clrs=None ):
     pp.ylabel('Progress towards target')
     pp.ylim([-5,3])
     pp.savefig(savfolder+'Progress_combined'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
     
     pp.figure()
@@ -419,7 +419,7 @@ def plot_progress_2( results, *args, savfolder='', suffix='_test', clrs=None ):
     pp.xticks(allX,labels=['Pre-training', 'Post'])
     pp.ylabel('Progress towards target')
     pp.savefig(savfolder+'Progress_alltarget'+suffix+'.png')
-    pp.close()
+    pp.close('all')
     
 
     return None
@@ -456,7 +456,7 @@ def plot_activity_norm_2( results, *args, savfolder='', suffix='_test', clrs=Non
     pp.ylabel('Activity norm')
     pp.ylim([0,10])
     pp.savefig(savfolder+'Activity_norm'+suffix+'.png')
-    pp.close()
+    pp.close('all')
     return None
 
 
@@ -488,7 +488,7 @@ def plot_asymmetry_2( results, *args, savfolder='', suffix='_test', clrs=None ):
     pp.ylim([0,5])
     pp.ylabel('Asymmetry of progress (across targets)')
     pp.savefig(savfolder+'Asymmetry_progress'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
     return None
@@ -647,7 +647,7 @@ def plot_hitrate_change_2( results, *args, savfolder='', suffix='_test', clrs=No
     fig2.savefig( savfolder+'success_hist_'+suffix+'.png')
     fig3.savefig( savfolder+'acqtime_hist_'+suffix+'.png')
     fig4.savefig( savfolder+'change_success_density_'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
     return None
@@ -700,7 +700,7 @@ def plot_hitrate_input( results, *args, savfolder='', suffix='_test', clrs=None 
     ax4.set_xlabel('Change in feedback norm')
     fig.savefig(savfolder+'meaninp_hitrate_change_'+suffix+'.png')
     fig2.savefig(savfolder+'meaninp_acqtime_change_'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
 
@@ -809,7 +809,7 @@ def plot_speed_input( results, *args, savfolder='', suffix='_test', clrs=None ):
     fig4.savefig(savfolder+'Learning_rate_inp_strategyratio_'+suffix+'.png')
     fig5.savefig(savfolder+'Learning_rate_angle_wintuit_'+suffix+'.png')
     fig6.savefig(savfolder+'Learning_rate_angle_wbase_'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
 
@@ -843,7 +843,7 @@ def plot_learning_speed_2( results, *args, savfolder='', suffix='_test', clrs=No
     ax2.set_ylabel('Count')
     ax2.set_xlabel('Fitted_k')
     pp.savefig(savfolder+'learning_speed_hist_'+suffix+'.png')
-    pp.close()
+    pp.close('all')
 
 
     return None
@@ -970,7 +970,7 @@ def plot_speed_controls( results, *args, savfolder='', suffix='_test', clrs=None
     fig5.savefig(savfolder+'Learning_rate_obs_times_controls_'+suffix+'.png')
     fig6.savefig(savfolder+'Learning_rate_ff_times_fb_controls_'+suffix+'.png')
     
-    pp.close()
+    pp.close('all')
 
 
 
@@ -1170,7 +1170,7 @@ def plot_speed_vectorfld( results, *args, savfolder='', suffix='_test', clrs=Non
     fig4.savefig(savfolder+'VF_FF_FB_Rec_Hist_'+suffix+'.png')
     fig5.savefig(savfolder+'VF_state_FB_Rec_Hist_'+suffix+'.png')
     
-    pp.close()
+    pp.close('all')
 
 
 # ############################################ #
@@ -1290,7 +1290,7 @@ def plot_loss_speed_controls( results, *args, savfolder='', suffix='_test', clrs
     fig5.savefig(savfolder+'Learning_loss_rate_obs_times_controls_'+suffix+'.png')
     fig6.savefig(savfolder+'Learning_loss_rate_ff_times_fb_controls_'+suffix+'.png')
     
-    pp.close()
+    pp.close('all')
 
 
 
@@ -1438,7 +1438,7 @@ def plot_var_dyn( results, *args, savfolder='', suffix='_test', clrs=None ):
     fig5.savefig(savfolder+'speed_expvar_decoder_'+suffix+'.png')
     fig6.savefig(savfolder+'speed_expvar_IM_'+suffix+'.png')
  
-    pp.close()
+    pp.close('all')
 
 
 
@@ -1510,7 +1510,7 @@ def plot_success_dyn( results, *args, savfolder='', suffix='_test', clrs=None ):
     fig2.savefig(savfolder+'changehit_controls_'+suffix+'.png')
 
  
-    pp.close()
+    pp.close('all')
 
 
 
@@ -1690,7 +1690,7 @@ def plot_success_im( results, *args, savfolder='', suffix='_test', clrs=None ):
     fig2.savefig(savfolder+'learningspeed_imchange_'+suffix+'.png')
 
  
-    pp.close()
+    pp.close('all')
 
 
 
@@ -1774,6 +1774,6 @@ def plot_distrib_im( results, *args, savfolder='', suffix='_test', clrs=None ):
     fig3.savefig(savfolder+'covdist_woverlap_hist_'+suffix+'.png')
     fig4.savefig(savfolder+'covdist_influence_'+suffix+'.png')
 
-    pp.close()
+    pp.close('all')
 
 

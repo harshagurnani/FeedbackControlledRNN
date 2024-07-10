@@ -1,6 +1,56 @@
 
 # ---------------------------------------------- ##
 # ---------------------------------------------- ##
+import numpy as np
+import os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)+'/'
+
+def get_folders( opt ):
+
+    if opt=='relu_test_':
+        path=parentdir
+        subf = 'relu_/'         # Main top-level architecture (eg in use_models)
+        save_suffix ='_relu_test_inp200_'
+        # wt change for feedback:
+        use_fbwt= 'W_fbk_0'##'W_fbk_0'#'output.weight' #'W_fbk_0'#
+        use_mod = None### 'fbk_p'#None# 
+        percp=False
+        
+        ###### Will search for all files in wmp['folder']+'/Model_**'+wmp['suffix']+wmp['file'][jj]
+        wmp={}                  # FOR WMPs
+        wmp['folder'] = path+'wmp/'+subf
+        wmp['file']   = ['trained_wmp_trainInp200.npy']         # filenames
+        wmp['save_suffix']=save_suffix                          # plot suffix
+        wmp['suffix']='_PC8'                                   # loading directory suffix
+        wmp['savfolder'] = wmp['folder']+'plots_test_/'           # save directory
+        npro=True
+
+        ###### Will search for all files in omp['folder']+'/Model_**'+omp['suffix']+omp['file'][jj]
+        omp={}                  # FOR OMPs
+        omp['folder'] = path+'omp/'+subf
+        omp['file']=  ['trained_omp_trainInp200.npy']           # filenames
+        omp['save_suffix']=save_suffix
+        omp['suffix']='_PC8'
+        omp['savfolder'] = omp['folder']+'plots_test_/'
+        npro=True
+
+        # FOR COMBINED DATA
+        joint={}                
+        joint['savfolder'] = parentdir+'saved_plots/pert/relu_test_/'
+        joint['save_suffix']=save_suffix+'combined_'
+        clrs = ['r','b']        # WMP and OMP color respectively
+
+        rmp={}
+
+    dic = {'wmp':wmp, 'omp':omp, 'joint':joint, 'clrs':clrs, 'rmp':rmp, 
+            'path':path, 'subf':subf, 'save_suffix':save_suffix, 
+            'use_fbwt':use_fbwt, 'use_mod':use_mod, 'percp':percp }
+            
+    return dic
+
+
+
 '''
 path='/data/users/hg84/FeedbackLearning/Data/'
 
@@ -658,7 +708,7 @@ joint['savfolder'] = omp['folder']+'plots_combined_InpOnly_logspeed_/'
 joint['save_suffix']=save_suffix+'combined_inponly_'
 clrs = ['r','b']        # WMP and OMP color respectively
 
-'''
+
 # ---------------------------------------------- ##
 # ---------------------------------------------- ##
 
@@ -726,3 +776,4 @@ clrs = ['r','b']        # WMP and OMP color respectively
 # ---------------------------------------------- ##
 # ---------------------------------------------- ##
 
+'''

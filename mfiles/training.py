@@ -231,6 +231,8 @@ def train(modelt, optimizert, criteriont, tt, targett, stimt, trajt=None, pertur
             print(('Epoch=%d | '%(epoch)) +" | ".join("%s=%.4f"%(k, v) for k, v in toprint.items()))
         
 
+    lc_headings = ['Loss', 'R_l0inp', 'R_l0rec', 'R_l0fbk', 'R_l0rate', 'ff_mod', 'fb_mod', 'dim_dw_fbk', 'corr_grad_inp', 'corr_grad_fbk', 'gradnorm', 'hit_rate']
+
     return lc
     
 
@@ -331,6 +333,8 @@ def model_loss(modelt, criteriont, output, r0, targeto,
     train_running_loss = [loss_train.detach().item(),regin.detach().item(),
                         regrec.detach().item(), regfbk.detach().item(),  reg0act.detach().item(),
                         reg_ff_mod, reg_fb_mod, hittarget ]
+    
+    lc_headings = ['Loss', 'R_l0inp', 'R_l0rec', 'R_l0fbk', 'R_l0rate', 'ff_mod', 'fb_mod', 'hit_rate']
     
     return loss, train_running_loss, toprint
     
@@ -440,6 +444,7 @@ def train_WP(modelt, lossfn, criteriont, tt, targett, stimt, trajt=None, perturb
             dic['fb_mod']['hidden.weight'] = dic['fbk_p']['hidden.weight'] - Wpert_hid - eta/hid_sigma**2 * error * Wpert_hid
         modelt.load_parameters( dic )
 
+    lc_headings = ['Loss', 'R_l0inp', 'R_l0rec', 'R_l0fbk', 'R_l0rate', 'ff_mod', 'fb_mod', 'hit_rate']
 
     return lc
     
