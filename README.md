@@ -11,7 +11,7 @@ doi: https://doi.org/10.1101/2024.05.24.595772
 ```
 
 ![image1](img/model.png)
-![image1](img/module_info.jpeg)
+
 
 
 For details, look at:
@@ -38,6 +38,7 @@ $ python scripts/batch_create_network.py -F 'relu_pos_/' -nf 5 -te 400 -pe 250 -
 $ python batch_create_network.py -F 'percp_expansion_/' -nf 2 -te 450 -pe 250 -lr 0.0002 -mtype 'layer2' -nout 4 -nhid 100 -nmf 10
 ```
 
+![image2](img/pert.png)
 
 ## Generate and filter perturbed maps
 Decide which models to use (follow [model construction](#model-construction) first), specify the dimensionality of the intrinsic manifold, and optionally specify conditions for filtering perturbed decoders:

@@ -16,7 +16,7 @@ sys.path.insert(0, parentdir)
 import plotting.plot_pert_training as pmt
 import tools.pert_analyses as pa
 from tools.regression import fit_linear_speed
-from scripts.list_of_folders import get_folders
+from tools.list_of_folders import get_folders
 
 import pandas as pd
 import seaborn as sns
@@ -204,20 +204,20 @@ if __name__ == "__main__":
 
     #### Regression of logistic rate parameter
 
-    maxy=1.2*max(results_WMP['fitted_k'])
+    maxy=max(results_WMP['fitted_k'])[0]*1.2
     miny=0
 
     fit_linear_speed(results_WMP, results_OMP, idy='fitted_k',  idx=('ctrb_fb','fracVF'), logX=True, 
-                     maxy=maxy, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_' )
     
     fit_linear_speed(results_WMP, results_OMP, idy='fitted_k',  idx=('log_ctrb_fb','fracVF'), logX=False, 
-                     maxy=maxy, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_fracVF_fb' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_fracVF_fb' )
     
     fit_linear_speed(results_WMP, results_OMP, idy='fitted_k',  idx=('log_ctrb_fb','hit_rate_pre'), logX=False, 
-                     maxy=maxy, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_hit_rate_' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_hit_rate_' )
     
     fit_linear_speed(results_WMP, results_OMP, idy='fitted_k',  idx=('log_ctrb_fb','expVar_diff'), logX=False, 
-                     maxy=maxy, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_exp_Var_' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_exp_Var_' )
 
 
 
