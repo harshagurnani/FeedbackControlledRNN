@@ -173,31 +173,31 @@ if __name__ == "__main__":
     #### Regression of learning speed
     print('speed versus ctrb_fb and fracVF:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('ctrb_fb','fracVF'), logX=True, 
-                        maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_ctrb_fb' )
+                        maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__ctrb_fb' )
     print('speed versus ctrb_ff and fracVF:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('ctrb_ff','fracVF'), logX=True, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_ctrb_ff' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__ctrb_ff' )
 
     
     print('speed versus ctrb_fb and 1/fracVF:')
     fit_linear_speed(results_WMP, results_OMP,idy='log_speed',  idx=('log_ctrb_fb','fracVF_inv'), logX=False, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_ctrb_fb_fracVF_inv' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__ctrb_fb_fracVF_inv' )
     
     print('speed versus ctrb_fb and 1/fracVF_fb:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('log_ctrb_fb','fracVF_fb_inv'), logX=False, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_ctrb_fb_fracVF_fb_inv' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__ctrb_fb_fracVF_fb_inv' )
     
     print('speed versus ctrb_fb and fracVF_fb:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('log_ctrb_fb','fracVF_fb'), logX=False, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logctrb_fb_fracVF_fb' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__logctrb_fb_fracVF_fb' )
     
     print('speed versus ctrb_fb and hit rate:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('log_ctrb_fb','hit_rate_pre'), logX=False, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='ctrb_fb_hit_rate_' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed_ctrb_fb_hit_rate_' )
     
     print('speed versus ctrb_fb and expVar_dff:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('log_ctrb_fb','expVar_diff'), logX=False, 
-                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='ctrb_fb_exp_Var_' )
+                     maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed_ctrb_fb_exp_Var_' )
     
 
     #### Regression of logistic rate parameter

@@ -157,8 +157,8 @@ def fit_linear_speed(*args,  idy='log_speed', idx=('ctrb_fb', 'fracVF'), logX=Fa
             data=10**data
             ypred = 10**ypred
             ytrue=10**ytrue
-            sns.kdeplot( data, x='true', y='pred', cmap=cmaps[kk], fill=True, alpha=0.4)
-            pp.scatter(ytrue, ypred,c=clrs[kk], alpha=0.2)
+        sns.kdeplot( data, x='true', y='pred', cmap=cmaps[kk], fill=True, alpha=0.4)
+        pp.scatter(ytrue, ypred,c=clrs[kk], alpha=0.2)
     
     pp.xlabel('true')
     pp.ylabel('predicted')
