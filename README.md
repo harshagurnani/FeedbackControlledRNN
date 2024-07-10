@@ -38,9 +38,10 @@ $ python scripts/batch_create_network.py -F 'relu_pos_/' -nf 5 -te 400 -pe 250 -
 $ python batch_create_network.py -F 'percp_expansion_/' -nf 2 -te 450 -pe 250 -lr 0.0002 -mtype 'layer2' -nout 4 -nhid 100 -nmf 10
 ```
 
-![image2](img/pert.png)
+
 
 ## Generate and filter perturbed maps
+<img src="img/pert.png" alt="Perturbed Maps" width="500" height="300">
 Decide which models to use (follow [model construction](#model-construction) first), specify the dimensionality of the intrinsic manifold, and optionally specify conditions for filtering perturbed decoders:
 
 Results are in [wmp/](/wmp/), [omp/](/omp/) or [rmp/](/rmp/). Each model file will have its own folder with filtered WMPs saved in `WMP_maps.npy` and the combined results will be in `xmp_tested_movepc_PCK.npy` where `xmp` is wmp, omp or rmp, and `PCK` specifies the intrinsic manifold dimensionality K.
