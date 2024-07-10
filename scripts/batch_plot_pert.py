@@ -142,6 +142,8 @@ if __name__ == "__main__":
     #####################################################
     # PLOTTING REGRESSIONS
     #####################################################
+    fracTrain=0.8
+    np.random.seed()
 
     results_WMP['expVar_pre'][np.isnan(results_WMP['expVar_pre'])]=1
     results_OMP['expVar_pre'][np.isnan(results_OMP['expVar_pre'])]=1
@@ -165,12 +167,12 @@ if __name__ == "__main__":
     results_OMP['log_ctrb_fb'] = np.log10(results_OMP['ctrb_fb'])
     
 
-    fracTrain=0.4
+    
+    #### Regression of learning speed
+    
     maxy=np.log10(120)
     miny=0
-    np.random.seed()
-
-    #### Regression of learning speed
+    
     print('speed versus ctrb_fb and fracVF:')
     fit_linear_speed(results_WMP, results_OMP, idy='log_speed',  idx=('ctrb_fb','fracVF'), logX=True, 
                         maxy=maxy, miny=miny, fracTrain=fracTrain, logy=True, savfolder=savfolder, suffix='_logspeed__ctrb_fb' )
@@ -202,7 +204,9 @@ if __name__ == "__main__":
 
     #### Regression of logistic rate parameter
 
-    maxy2=0.2
+    maxy=1.2*max(results_WMP['fitted_k'])
+    miny=0
+
     fit_linear_speed(results_WMP, results_OMP, idy='fitted_k',  idx=('ctrb_fb','fracVF'), logX=True, 
                      maxy=maxy, fracTrain=fracTrain, logy=False, savfolder=savfolder, suffix='_fittedk_' )
     
@@ -219,12 +223,12 @@ if __name__ == "__main__":
 
     #### Regression of change in hit rate
 
-
     results_WMP['change_hit'] = (results_WMP['hit_rate_post'] - results_WMP['hit_rate_pre'])/(1- results_WMP['hit_rate_pre'])
     results_OMP['change_hit'] = (results_OMP['hit_rate_post'] - results_OMP['hit_rate_pre'])/(1- results_OMP['hit_rate_pre'])
 
     maxy=1.1
     miny=-.1
+
     print('change_hit versus ctrb_fb and ctrb_ff:')
     fit_linear_speed(results_WMP, results_OMP, idy='change_hit',  idx=('ctrb_fb','ctrb_ff'), logX=True, 
                      maxy=maxy, miny=miny, fracTrain=fracTrain, logy=False, clampy=True, yfit_max=1, savfolder=savfolder, suffix='_changehit_ctrb_' )
