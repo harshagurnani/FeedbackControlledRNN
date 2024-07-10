@@ -90,6 +90,21 @@ OR for a 2-layer feedback controller, train controller output layer:
 $ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp' -fbout 1 -file 'omp_tested_movepc_PC8.npy' -sf2 '_trainFbOut200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
 ```
 
+### Analysis of Adaptation
+For a single file, use `tools.pert_analyses.get_training_results`:
+```
+import numpy as np
+import tools.pert_analyses as pa
+pa.get_training_results( file='trained_wmp_trainInp200.npy', folder='wmp/relu_/Model_6_movePC_PC8/', savfolder='saved_plots/wmp/' )
+np.save( 'wmp/example_results.npy', res )
+```
+
+For multiple files, use `scripts/batch_plot_pert.py`. This combines results across files, separately for wmp and omp. The relevant options can be listed in `scripts/list_of_folders.py`. It also plots a bunch of analyses.
+```
+$ python scripts/batch_plot_pert.py -F 'relu_test_'
+$ python scripts/batch_plot_pert.py -F 'relu_inp200'
+```
+
 ## RNN Analysis
 
 ### Dynamics of error correction
