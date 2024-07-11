@@ -96,7 +96,7 @@ $ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp'
 
 ### Analysis of Adaptation
 For a single file, use `tools.pert_analyses.get_training_results`:
-```
+```python
 import numpy as np
 import tools.pert_analyses as pa
 pa.get_training_results( file='trained_wmp_trainInp200.npy', folder='wmp/relu_/Model_6_movePC_PC8/', savfolder='saved_plots/wmp/' )
@@ -114,7 +114,7 @@ $ python scripts/batch_pert_analysis.py -F 'relu_inp200'
 
 
 ### Dynamics of error correction
-<img src="img/error.png" alt="Activity analysis"  height="200">
+<img src="img/error.png" alt="Activity analysis"  height="150">
 
 Look at `tools/feedback_analysis.py`. Generates graphs for each plot_type, or for many scales.
 
