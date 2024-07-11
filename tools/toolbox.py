@@ -6,6 +6,7 @@ Harsha Gurnani, 2023
 """
 import numpy as np
 from math import sqrt
+import scipy.linalg as ll
 
 def stim_gen_simple( theta, delay=100, dt=0.1, T=500, stim_delay=20 ):
     """
@@ -195,4 +196,31 @@ def gen_data_discrete( nSamples, useTheta=None, dt=0.05, maxT=600, fixedDelay=Tr
         return stim, target, useDelay, hold
     else:
         return stim, target, useDelay
+
+
+
+def gen_noisex( nSamples,  nNeu=100, dt=0.05, maxT=600, useDelay=[150,300,500], W=None, mag=0.5 ):
+    ''' perturb activity in the direction of W at fixed delays'''
+    nT = np.int_(maxT/dt)
+    if W is None:
+        W = np.random.randn( nNeu, 1 )
+    if W.shape[1]>1:
+        W=np.sum(W,axis=1)                
+    W = W/ll.norm(W)
+
+    n_jump = len(useDelay)
+    maxSamples = nSamples*(n_jump+1)
+    
+    noisex = np.zeros( [maxSamples, nT, nNeu] )
+    for pid in range(1,n_jump+1):
+        tr = (pid)*nSamples
+        jid = np.int_(useDelay[pid-1]/dt)
+        for jj in range(nSamples):
+            trial=tr+jj
+            dirn=np.random.choice([-1,1])
+            noisex[trial,jid,:] = dirn*mag*W
+
+    return noisex
+
+
 

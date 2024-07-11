@@ -152,3 +152,22 @@ $ python scripts/batch_oblique.py
 ```
 
 Note that the trained models are not saved, only the statistics.
+
+
+### Effect of activity perturbations
+1. Isotropic noise reshaped by recurrent interactions. 
+```python
+import tools.noise_isotropic_snr as ns
+import glob.glob
+files = glob.glob('use_models/relu_/*.npy')
+noise = [0.01,0.03,0.1,0.5,1,3,10]
+ns.analyse_files( files, noise_range=noise, nshuff=100 )
+```
+
+2. Perturb along different directions in activity space and measure AUC of error
+```python
+import tools.noise_pert_along_W_AUC as np
+import glob.glob
+files = glob.glob('use_models/relu_/*.npy')
+np.analyse_files( files, nshuff=100 )
+```

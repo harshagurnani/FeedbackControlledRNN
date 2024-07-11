@@ -128,7 +128,7 @@ class postModel( mainModel ):
         return None
     
 
-    def get_intuitive_map( self, nPC=10, ch_params={} ):
+    def get_intuitive_map( self, nPC=10, ch_params={}, use_vel=True ):
         ''' fit a new readout weight matrix by fitting a linear regression between observed velocity
         and activity projected in top 'nC' principal components
         - currently only supports linear readouts without bias (as intercept of fit is not separated between neuron mean and readout bias)
@@ -145,7 +145,7 @@ class postModel( mainModel ):
         dic = self.test_model( tdata=tdata )
 
         reg, px_1 = ah.intuitive_decoder(  dic['res'], nPC=nPC, dt=p['dt'], scaleCoef=p['intuitive.scaleCoef'], nTest=p['intuitive.nTest'], noise_x=p['intuitive.noiseX'],
-                                        scaleX=p['intuitive.scaleX'], fitPC=p['intuitive.fitPC'], add_bias=p['intuitive.add_bias'] , use_tm=p['intuitive.use_tm'] )
+                                        scaleX=p['intuitive.scaleX'], fitPC=p['intuitive.fitPC'], add_bias=p['intuitive.add_bias'] , use_tm=p['intuitive.use_tm'], use_vel=use_vel )
         
         w_fit = reg.coef_
         U = px_1.components_
