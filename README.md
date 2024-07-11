@@ -118,7 +118,7 @@ $ python scripts/batch_pert_analysis.py -F 'relu_inp200'
 
 Look at `tools/feedback_analysis.py`. Generates graphs for each plot_type, or for many scales.
 
-```
+```python
 import tools.feedback_analysis as fa
 fa.analyse_all_files( scale=[0.1,0.3,0.5,0.8,1.0], suffix='allfiles' )
 fa.analyse_all_files(plot_type='t20', suffix='allfiles')
