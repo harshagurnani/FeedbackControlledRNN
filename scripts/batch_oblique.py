@@ -120,10 +120,10 @@ if __name__ == "__main__":
     # ---------------------
 
     # parameter sweep:
-    wout_scale = [1,2]#[ 1, 2, 5]                  # readout scale
+    wout_scale = [ 1, 2, 5]                  # readout scale
     n_wout = len(wout_scale)
 
-    rnn_scale = [.5,1]#[0.3, 0.5,1,1.25]            # rnn initial g (1.5 is chaotic; greater g harder to train)
+    rnn_scale = [0.3, 0.5,1,1.25]            # rnn initial g (1.5 is chaotic; greater g harder to train)
     n_wrec = len(rnn_scale)
 
     n_neurons = [100]                        # no. of rnn units

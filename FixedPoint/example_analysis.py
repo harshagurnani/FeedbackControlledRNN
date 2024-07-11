@@ -31,7 +31,7 @@ cm = mpl.colormaps[cmap]
 ######################################################
 sv= homedir + '/use_models/relu_/'
 fn='tau5__with_training_seed_6.npy'
-plotdir =  homedir + '/saved_plots/'
+plotdir =  homedir + '/saved_plots/FPS/'
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
 
