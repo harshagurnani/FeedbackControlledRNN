@@ -14,7 +14,7 @@ sys.path.insert(0, parentdir)
 import numpy as np
 import tools.analysis_helpers as ah
 import scipy.linalg as ll
-
+import control as ctrl
 
 def study_trained_dynamics( params1, res, nPC=10, use_trials=None, starttm=20, stoptm=None, output_dim=2 ):
     '''
@@ -325,3 +325,35 @@ def study_alignment( wout, wfbk, wrec, intuitive=None, nPC=8, nAngles=30, output
 
 
     return theta_dic
+
+
+def Henrici_index( A ):
+    #A = params1['W_rec_0']
+    n = ll.norm( A, ord='fro')
+    e, v = ll.eig(A)
+
+    dfn = np.sqrt( n**2 - np.sum( np.abs(e)**2 ) )
+    return dfn
+
+def return_controls( params ):
+    Wrec = params['W_rec_0'].T 
+    A = Wrec - np.eye(Wrec.shape[0])
+
+    Wout = params['W_out_0'].T # 2 x N
+    Wfbk = params['W_fbk_0'].T # N x 2
+    Win = params['W_in_0'].T   # N x 3
+    # U = # N x npc
+    # solve the lyap eqn for observability
+    # solve the lyap eqn for controllability
+    CtrlGram_FF = ctrl.lyap( A, Win@Win.T )
+    CtrlGram_FB = ctrl.lyap( A, Wfbk@Wfbk.T )
+    # compute controllability of readout
+    npc=2
+    Wout_norm = Wout.T/ll.norm(Wout.T,axis=0)
+    Wout_norm = Wout_norm.T
+    beta_ff = np.trace( Wout_norm @ CtrlGram_FF @ Wout_norm.T)/Win.shape[1]
+    beta_fb = np.trace( Wout_norm @ CtrlGram_FB @ Wout_norm.T)/Wfbk.shape[1]
+
+    dic={  'ctrb_ff':beta_ff, 'ctrb_fb':beta_fb}  #'CtrlGram_FF':CtrlGram_FF, 'CtrlGram_FB':CtrlGram_FB,
+
+    return dic

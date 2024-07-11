@@ -284,6 +284,96 @@ if __name__ == "__main__":
     #####################################################
     # COMPARE REGRESSIONS
     ##################################################### 
+    results_WMP['log_cvoverlap'] = np.log10(results_WMP['im_change'])
+    results_OMP['log_cvoverlap'] = np.log10(results_OMP['im_change'])
+
+    usey = 'log_speed'
+    miny=1
+    maxy=120
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('ctrb_fb','fracVF'), 
+                        nfit=40, fracTrain=fracTrain,  logy=True, clampy=False , yfit_max=1, # fitting extras
+                        suffix='_reg40_speed_1_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png', logX=True )
+
+    dic_speed_vf = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('expVar_diff','theta_im_wperturb'), #'theta_im_wperturb',
+                        nfit=40, fracTrain=fracTrain,  logy=True, clampy=False , yfit_max=1, # fitting extras
+                        suffix='_reg40_speed_2_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png', logX=False)
+
+    dic_speed_ev = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('theta_intuit_wperturb', 'theta_wout_wbase'), 
+                        nfit=40, fracTrain=fracTrain,  logy=True, clampy=False , yfit_max=1, # fitting extras
+                        suffix='_reg40_speed_3_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png' , logX=False)
+
+    dic_speed_theta = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('expVar_decoder', 'theta_wout_wbase'), 
+                        nfit=40, fracTrain=fracTrain,  logy=True, clampy=False , yfit_max=1, # fitting extras
+                        suffix='_reg40_speed_4_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png' , logX=False)
+
+    dic_speed_dec = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('log_cvoverlap','expVar_diff'), 
+                        nfit=40, fracTrain=fracTrain,  logy=True, clampy=False , yfit_max=1, # fitting extras
+                        suffix='_reg40_speed_5_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png', logX=False )
+
+    dic_speed_cov = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+
+    pp.close()
+    pp.violinplot([dic_speed_vf['test'], dic_speed_ev['test'], dic_speed_theta['test'], dic_speed_dec['test'], dic_speed_cov['test']],[1,2,3, 4,5],showmedians=True)
+    pp.plot([0.5,5.5],[0,0],color='b')
+    pp.ylim([-.2,1])
+    pp.xticks([1,2,3,4,5],labels=['VF','EV','Theta','Dec','Cov'])
+    pp.savefig(savfolder+'speed_regAll.png')
+    pp.savefig(savfolder+'speed_regAll.svg')
+
+    #####
+    usey = 'change_hit'
+    miny=-.3
+    maxy=1.1
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('ctrb_fb', 'fracVF'), 
+                        nfit=40, fracTrain=fracTrain,  logy=False, clampy=True , yfit_max=1, logX=True, # fitting extras
+                        suffix='_reg40_hit_1_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png')
+
+    dic_hit_vf = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('theta_im_wperturb', 'expVar_diff'), 
+                        nfit=40, fracTrain=fracTrain,  logy=False, clampy=True, yfit_max=1, # fitting extras
+                        suffix='_reg40_hit_2_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png',logX=False)
+
+    dic_hit_ev = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('theta_intuit_wperturb', 'theta_wout_wbase'), 
+                        nfit=40, fracTrain=fracTrain,  logy=False, clampy=True , yfit_max=1, # fitting extras
+                        suffix='_reg40_hit_3_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png',logX=False)
+
+    dic_hit_theta = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('expVar_decoder', 'theta_wout_wbase'), 
+                        nfit=40, fracTrain=fracTrain,  logy=False, clampy=True , yfit_max=1, # fitting extras
+                        suffix='_reg40_hit_4_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png',logX=False )
+
+    dic_hit_dec = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    reg, train_score, test_score, test_score_clamp = fit_linear_speed(results_WMP, results_OMP,  idy=usey, idx=('log_cvoverlap', 'expVar_diff'), 
+                        nfit=40, fracTrain=fracTrain,  logy=False, clampy=True , yfit_max=1, # fitting extras
+                        suffix='_reg40_hit_5_', savfolder=savfolder, miny=miny,maxy=maxy, ext='.png',logX=False )
+
+    dic_speed_cov = {'reg':reg, 'train':train_score, 'test':test_score, 'clamp':test_score_clamp}
+
+    pp.close()
+    pp.violinplot([dic_hit_vf['clamp'], dic_hit_ev['clamp'], dic_hit_theta['clamp'], dic_hit_dec['clamp'], dic_speed_cov['clamp']],[1,2,3, 4,5],showmedians=True)
+    pp.plot([.5,5.5],[0,0])
+    pp.xlim([.5,5.5])
+    pp.ylim([-0.2,1])
+    pp.xticks([1,2,3,4,5],labels=['VF','EV','Theta','Dec','Cov'])
+    pp.savefig(savfolder+'hit_regAll.png')
+    pp.savefig(savfolder+'hit_regAll.svg')
 
 
 

@@ -20,7 +20,7 @@ def get_folders( opt ):
         ###### Will search for all files in wmp['folder']+'/Model_**'+wmp['suffix']+wmp['file'][jj]
         wmp={}                  # FOR WMPs
         wmp['folder'] = path+'wmp/'+subf
-        wmp['file']   = ['trained_wmp_trainInp200.npy']         # filenames
+        wmp['file']   = ['trained_wmp_trainInp200.npy', 'trained_wmp_trainInp200_v2_.npy']         # filenames
         wmp['save_suffix']=save_suffix                          # plot suffix
         wmp['suffix']='_PC8'                                   # loading directory suffix
         wmp['savfolder'] = wmp['folder']+'plots_test_/'           # save directory
@@ -29,7 +29,7 @@ def get_folders( opt ):
         ###### Will search for all files in omp['folder']+'/Model_**'+omp['suffix']+omp['file'][jj]
         omp={}                  # FOR OMPs
         omp['folder'] = path+'omp/'+subf
-        omp['file']=  ['trained_omp_trainInp200.npy']           # filenames
+        omp['file']=  ['trained_omp_trainInp200.npy', 'trained_omp_trainInp200_v2_.npy']           # filenames
         omp['save_suffix']=save_suffix
         omp['suffix']='_PC8'
         omp['savfolder'] = omp['folder']+'plots_test_/'
