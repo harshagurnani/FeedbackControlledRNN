@@ -21,7 +21,7 @@ mpl.rc('font', **font)
 def plot_oblique_results( topfolder = 'relu_test_/', file='wout_angles.npy', plotPC=8, ext='.png', min_hit=0.3 ):
 
     #### Plot angles as fn of wout scale ?
-    savfolder = 'oblique_dynamics/'+topfolder
+    savfolder = parentdir+'saved_plots/oblique_dynamics/'+topfolder
     file  = savfolder+'wout_angles.npy'
     allAng = np.load( file, allow_pickle=True )
 
