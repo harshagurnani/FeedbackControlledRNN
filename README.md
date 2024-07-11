@@ -68,16 +68,17 @@ Use `scripts/batch_train_perturbation.py` for batch run.
 - Specify no. of perturbed decoders per model file (`-ntr`)
 - Specify no. of repetitions with each decoder (`-nr`)
 - Specify training parameters (`-te`, `-pe`)
+- Specify seed to sample decoders (`-seed`)
 
 **Example 1:** Train WMPs
 
 Loads `wmp_tested_movepc_PC8.npy` from [wmp/relu_](/wmp/relu_/), uses 1 model file from it, trains input weights (default) for 3 maps, and saves it in [wmp/relu_/Model_XX_movePC_PC8/trained_trainInp200/](/wmp/relu_/Model_6_movePC_PC8/):
 ```
-$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
+$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -seed 44
 ```
-OR Train via weight perturbation (`-twp`):
+OR Train the same maps via weight perturbation (`-twp`):
 ```
-$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -twp 1  -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 
+$ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -twp 1  -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -seed 44
 ```
 
 **Example 2:** Train OMPs
@@ -85,12 +86,12 @@ $ python scripts/batch_train_perturbation.py -sf2 '_trainInp200' -twp 1  -nf 1 -
 Loads `omp_tested_movepc_PC8.npy` from [omp/relu_](/wmp/relu_/), uses 1 model file from it, trains recurrent weights (`-rec`) for 3 maps, and saves it in [omp/relu_/Model_XX_movePC_PC8/trained_trainRec200/](/omp/relu_/Model_6_movePC_PC8/):
 (Training recurrent weights automatically turns off input weights)
 ```
-$ python scripts/batch_train_perturbation.py -map 'omp' -file 'omp_tested_movepc_PC8.npy' -rec 1 -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
+$ python scripts/batch_train_perturbation.py -map 'omp' -file 'omp_tested_movepc_PC8.npy' -rec 1 -sf2 '_trainRec200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -seed 33
 ```
 OR for a 2-layer feedback controller, train controller output layer:
 (Training controller module automatically turns off feedback weights but NOT feedforward weights)
 ```
-$ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp' -fbout 1 -file 'omp_tested_movepc_PC8.npy' -sf2 '_trainFbOut200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1
+$ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp' -fbout 1 -file 'omp_tested_movepc_PC8.npy' -sf2 '_trainFbOut200' -nf 1 -ntr 3 -te 200 -pe 200 -nr 1 -seed 30
 ```
 
 ### Analysis of Adaptation
@@ -102,10 +103,10 @@ pa.get_training_results( file='trained_wmp_trainInp200.npy', folder='wmp/relu_/M
 np.save( 'wmp/example_results.npy', res )
 ```
 
-For multiple files, use `scripts/batch_plot_pert.py`. This combines results across files, separately for wmp and omp. The relevant options can be listed in `scripts/list_of_folders.py`. It also plots a bunch of analyses.
+For multiple files, use `scripts/batch_pert_analysis.py`. This combines results across files, separately for wmp and omp. The relevant options can be listed in `scripts/list_of_folders.py`. It also plots a bunch of analyses.
 ```
-$ python scripts/batch_plot_pert.py -F 'relu_test_'
-$ python scripts/batch_plot_pert.py -F 'relu_inp200'
+$ python scripts/batch_pert_analysis.py -F 'relu_test_'
+$ python scripts/batch_pert_analysis.py -F 'relu_inp200'
 ```
 
 ## RNN Analysis
@@ -134,3 +135,10 @@ Look at [LDSFit](/LDSFit/) folder. Edit options within the files if you want suc
 ```
 $ python LDSFit/batch_analyse_relu_cv.py
 ```
+
+### Alignment with readout weights
+To do a search over parameters, train multiple networks, compute alignment statistics and plot them, use:
+```
+$ python scripts/batch_oblique.py
+```
+Note that the trained models are not saved, only the statistics.

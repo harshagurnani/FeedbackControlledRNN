@@ -37,6 +37,7 @@ Arguments:
     -thr, --thresh:     Maximum distance from target to consider a hit (default: 0.1)
     -idx, --index:      CUDA device index (default: 1)
     -sign, --sigma_n:   Activity noise sigma (default: 0.0)
+    -pos, --decode_p:   Position decoder (1) or velocity decoder (0) (default: 0)
 
 '''
 
@@ -47,12 +48,9 @@ import sys
 import argparse
 import inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-if '/scripts' in currentdir[-10:]:
-    parentdir = os.path.dirname(currentdir)
-    parentdir=parentdir+'/'
-    sys.path.insert(0, parentdir) 
-else:
-    parentdir=currentdir
+parentdir = os.path.dirname(currentdir)+'/'
+os.chdir(parentdir)
+sys.path.insert(0, parentdir)
 
 
 import torch
