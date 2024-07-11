@@ -155,6 +155,8 @@ Note that the trained models are not saved, only the statistics.
 
 
 ### Effect of activity perturbations
+<img src="img/noise.png" alt="Analysis of activity poerturbations"  height="200">
+
 1. Isotropic noise reshaped by recurrent interactions. 
 ```python
 import tools.noise_isotropic_snr as ns
