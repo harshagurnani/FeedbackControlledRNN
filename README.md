@@ -143,6 +143,7 @@ $ python LDSFit/batch_analyse_relu_cv.py
 ### Alignment with readout weights
 <img src="img/pcs.png" alt="Misalignment of activity modes"  height="200">
 To do a search over parameters, train multiple networks, compute alignment statistics and plot them, use:
+
 ```
 $ python scripts/batch_oblique.py
 ```
