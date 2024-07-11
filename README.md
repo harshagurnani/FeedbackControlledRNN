@@ -96,7 +96,6 @@ $ python scripts/batch_train_perturbation.py -F 'percp2_expansion_/'  -map 'omp'
 
 ### Analysis of Adaptation
 For a single file, use `tools.pert_analyses.get_training_results`:
-
 ```
 import numpy as np
 import tools.pert_analyses as pa
@@ -129,6 +128,7 @@ fa.analyse_all_files(plot_type='error', suffix='allfiles')
 
 ### Fixed points of Joint RNN-Cursor System
 <img src="img/fps.png" alt="Fixed points of rnn-cursor system"  height="200">
+
 Look at [FixedPoint](/FixedPoint/) folder. 
 ```
 $ python FixedPoint/example_analysis.py
@@ -144,7 +144,7 @@ $ python LDSFit/batch_analyse_relu_cv.py
 ```
 
 ### Alignment with readout weights
-<img src="img/pcs.png" alt="Misalignment of activity modes"  height="200">
+<img src="img/pcs.png" alt="Misalignment of activity modes"  height="150">
 To do a search over parameters, train multiple networks, compute alignment statistics and plot them, use:
 
 ```
