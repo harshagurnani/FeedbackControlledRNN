@@ -146,4 +146,5 @@ To do a search over parameters, train multiple networks, compute alignment stati
 ```
 $ python scripts/batch_oblique.py
 ```
+
 Note that the trained models are not saved, only the statistics.
