@@ -111,7 +111,10 @@ $ python scripts/batch_pert_analysis.py -F 'relu_inp200'
 
 ## RNN Analysis
 
+
+
 ### Dynamics of error correction
+<img src="img/error.png" alt="Activity analysis"  height="200">
 Look at `tools/feedback_analysis.py`. Generates graphs for each plot_type, or for many scales.
 ```
 import tools.feedback_analysis as fa
@@ -122,6 +125,7 @@ fa.analyse_all_files(plot_type='error', suffix='allfiles')
 ```
 
 ### Fixed points of Joint RNN-Cursor System
+<img src="img/fps.png" alt="Fixed points of rnn-cursor system"  height="200">
 Look at [FixedPoint](/FixedPoint/) folder. 
 ```
 $ python FixedPoint/example_analysis.py
@@ -137,6 +141,7 @@ $ python LDSFit/batch_analyse_relu_cv.py
 ```
 
 ### Alignment with readout weights
+<img src="img/pcs.png" alt="Misalignment of activity modes"  height="200">
 To do a search over parameters, train multiple networks, compute alignment statistics and plot them, use:
 ```
 $ python scripts/batch_oblique.py
