@@ -12,6 +12,7 @@ import tools.run_network_ as rnet
 import tools.perturb_network_ as pnet
 import tools.wout_perturbations as wpert
 import tools.analysis_helpers as ah
+import tools.measures as mm
 
 import matplotlib.pyplot as pp
 import matplotlib as mpl
@@ -53,7 +54,7 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
     n1 = 100
     adapt_p = { 'maxT':800, 'tsteps':800, 'test_maxT':1500, 'lr': 0.001, 'batch_size':1, 'training_epochs':5, 'perturb_epochs':5,
                 'train_inp' : True, 'train_rec': False, 'train_fbk':True, 'train_inp_pre': False, 'train_fbk_pre': False, 'train_rec_mf':False,
-                'thresh': 0.15, 'loss_mask':None, 'loss_t':300, 'jump_amp': 0.01, 'hit_period': 200, 'sigma_n':0.0 }
+                'thresh': 0.10, 'loss_mask':None, 'loss_t':300, 'jump_amp': 0.01, 'hit_period': 200, 'sigma_n':0.0 }
     adapt_p.update( adaptparams )
     print(adapt_p)
     newExp = pnet.postModel( model_path=file, adapt_p=adapt_p )
@@ -202,9 +203,9 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
             tmp2 = tmp.copy()
             for rep in range(nReps):
                 lc = train_res[jj][rep]['posttrain']['lc']
-                loss = lc[:,0]
+                #loss = lc[:,0]
                 hitrate = lc[:,-1]
-                yy=(lc[:,0])
+                yy=(lc[:,0]) # loss
                 tmp[:,rep] = yy
                 ax0.plot(np.log10(yy),color=cm(jj/nx))
                 zz = uniform_filter1d(hitrate, size=avg_window)
@@ -232,7 +233,7 @@ def train_wmp(rdic, pfolder = 'wmp/', folder = 'relu_rnn_/', resname = 'trained_
         pp.close()
 
 
-def analyze_training( wmp_train, trained=True, dic_orig={}, thresh=0.15 ):
+def analyze_training( wmp_train, trained=True, dic_orig={}, thresh=0.10 ):
     '''
     Gather statistics about training:
     - Hit rate at 50, 100, 200 trials (nan if not trained)
@@ -279,8 +280,8 @@ def analyze_training( wmp_train, trained=True, dic_orig={}, thresh=0.15 ):
     # Fractional variance in "Intrinsic manifold"
     X_proj_pre = px_base.transform(X_pre_flat)  @ U_base
     X_proj_post = px_base.transform(X_post_flat)  @ U_base
-    expVar_pre = np.sum( np.var(X_proj_pre, axis=-1))/np.sum( np.var(X_pre_flat, axis=-1))
-    expVar_post = np.sum( np.var(X_proj_post, axis=-1))/np.sum( np.var(X_post_flat, axis=-1))
+    expVar_pre = mm.get_variance_in_U(X_pre, U_base.T ) #np.sum( np.var(X_proj_pre, axis=-1))/np.sum( np.var(X_pre_flat, axis=-1))
+    expVar_post = mm.get_variance_in_U(X_post, U_base.T ) #np.sum( np.var(X_proj_post, axis=-1))/np.sum( np.var(X_post_flat, axis=-1))
 
     ## Top PCs of closed loop performance?
     px_pre, _ = ah.get_X_pcs( X_pre, nC=U_base.shape[0] )
@@ -294,7 +295,15 @@ def analyze_training( wmp_train, trained=True, dic_orig={}, thresh=0.15 ):
     if np.random.random()<0.1:
         pp.plot( vel_pre[:,0], vel_pre[:,1], c='k')
         pp.plot( vel_post[:,0], vel_post[:,1], c='r')
-        pp.savefig('vel_repertoire'+np.str_(rn)+'.png')
+        pp.savefig('vel_repertoire_wpert_'+np.str_(rn)+'.png')
+        pp.close()
+
+    vel_pre = X_orig_flat @ W_base
+    vel_post = X_post_flat @ W_base
+    if np.random.random()<0.1:
+        pp.plot( vel_pre[:,0], vel_pre[:,1], c='k')
+        pp.plot( vel_post[:,0], vel_post[:,1], c='b')
+        pp.savefig('vel_repertoire_wbase_'+np.str_(rn)+'.png')
         pp.close()
 
 

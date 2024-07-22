@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+'''
+Various alignment and dynamics measures
+
+Harsha Gurnani, 2023
+'''
+
 import numpy as np
 import scipy.linalg as ll
 from matplotlib import pyplot as pp
@@ -19,6 +29,7 @@ def compute_popov_test( Wrec, Wfb, Wout ):
     Wout = Wout.T   #Out x Neu
     Wfb = Wfb.T     #Neu x Fb
 
+    # closed-loop dynamics
     FullCM = np.zeros((nA, nA+nfb))
     FullCM[:nneu,nneu:] = Wfb
 
@@ -52,6 +63,7 @@ def compute_max_eval(  Wrec, Wfb, Wout ):
     Wout = Wout.T   #Out x Neu
     Wfb = Wfb.T     #Neu x Fb
 
+    # closed-loop dynamics
     FullA = np.zeros((nA, nA))
     FullA[:nneu,:nneu] = A          # 
     FullA[nneu:,:nneu] = Wout       # remaining columns are 0
@@ -68,11 +80,11 @@ def exp_rate(t, a, b, c):
     return a * np.exp(-b *t) + c
 
 def log_rate(t, a, m, k, t0):
-    # eqn such that m is intercept at t=0, 
+    # eqn such that m is intercept at t=t0, 
     return a / (1.0 + np.exp(-k * (t - t0))) + m
 
 def fit_logit( hitrate,  p0 = (1.0, 0.0, 1/20.0, 50.0), bounds=([0.0,-0.1,1/5000.0,-300.0],[1.0,1.0,1.0,300.0]) ):  #bounds=([0.0,-0.1,1/2000.0,-150.0],[1.0,1.0,1.0,150.0]) 
-
+    ''' fit logistic curve'''
     ntrials = hitrate.shape[0]
     tData = np.arange(ntrials)
 
@@ -95,7 +107,7 @@ def fit_logit( hitrate,  p0 = (1.0, 0.0, 1/20.0, 50.0), bounds=([0.0,-0.1,1/5000
 
 
 def fit_exp( loss,  p0 = (0.5, 0.015, 0.05), bounds=([0.0, 0.001, 0],[5.0, 0.2, 3]) ):
-
+    ''' fit exponential curve '''
     ntrials = loss.shape[0]
     tData = np.arange(ntrials)
 
@@ -135,8 +147,6 @@ def compare_speed_eigval( all_files, idx=-1, avg_window=20 ):
         
         for map in range(nmaps):
             Wout = train_res[map][0]['wout'].copy()
-            Wout
-
             nReps = len(train_res[map])
             hitrate = train_res[map][0]['posttrain']['lc'][idx]
             allh = np.zeros((hitrate.shape[0],nReps))
@@ -155,52 +165,8 @@ def compare_speed_eigval( all_files, idx=-1, avg_window=20 ):
 
 
 
-'''
-ids = [8,90,14,56,86]
-import numpy as np
-import matplotlib.pyplot as pp
-import matplo
-from tools.measures import *
-allres=[]
-file='trained_wmp_trainFbk200_.npy'
-folder = 'wmp/relu_/'
-suffix='_new__PC8/'
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres.append(ar['train_res'])
- 
-speed, fitted_k, max_ev = compare_speed_eigval(allres)
-
-
-folder = 'omp/relu_/'
-file='trained_omp_trainFbk200_.npy'
-suffix='_new__PC8/'
-allres=[]
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres.append(ar['train_res'])
-
-speed2, fitted_k2, max_ev2 = compare_speed_eigval(allres)
-
-nmap=8
-
-pp.close()
-pp.scatter(max_ev,speed)
-pp.scatter(max_ev2,speed2,c='r')
-pp.savefig('speed.png')
-pp.close()
-pp.scatter(max_ev,fitted_k)
-pp.scatter(max_ev2,fitted_k2,c='r')
-pp.savefig('fittedk.png')
-
-'''
-
-
-
 def compute_fbk_alignment(  wmp_train, nVec = 8 ):
-
+    ''' angle between fbk and sensitive dirns of recurrent dynamics '''
     Wrec0 = wmp_train['posttrain']['params0']['W_rec_0']
     Wrec1 = wmp_train['posttrain']['params1']['W_rec_0']
     Wfbk0 = wmp_train['posttrain']['params0']['W_in_0']
@@ -247,8 +213,6 @@ def compare_speed_alignment( all_files, idx=-1, avg_window=20 ):
             
 
             angles0, angles1, meanV0, meanV1 = compute_fbk_alignment(  train_res[map][0] )
-            #angle_0.append(meanV0)
-            #angle_1.append(meanV1)
             angle_0.append(min(angles0))
             angle_1.append(min(angles1))
 
@@ -259,68 +223,16 @@ def compare_speed_alignment( all_files, idx=-1, avg_window=20 ):
 
 
 
-
-'''
-ids = [8,90,14,56,86]
-import numpy as np
-import matplotlib.pyplot as pp
-import matplotlib as mpl
-from tools.measures import *
-allres=[]
-file='trained_wmp_trainFbk200_.npy'
-folder = 'wmp/relu_/'
-suffix='_new__PC8/'
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres.append(ar['train_res'])
- 
-
-speed, fitted_k, angle_0, angle_1, delta = compare_speed_alignment(allres)
-
-
-folder = 'omp/relu_/'
-file='trained_omp_trainFbk200_.npy'
-suffix='_new__PC8/'
-allres2=[]
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres2.append(ar['train_res'])
-
-speed2, fitted_k2, angle_02, angle_12, delta2 = compare_speed_alignment(allres2)
-
-pp.close()
-pp.scatter(np.rad2deg(angle_1),speed)
-pp.scatter(np.rad2deg(angle_12),speed2,c='r')
-#pp.ylim([200,510])
-pp.savefig('speed.png')
-pp.close()
-pp.scatter(np.rad2deg(angle_1),fitted_k)
-pp.scatter(np.rad2deg(angle_12),fitted_k2,c='r')
-pp.savefig('fittedk.png')
-
-'''
-
-
-
 def compute_wt_change(  wmp_train, use_mod=None, usewt='W_in_0' ):
-
-    #print(wmp_train['posttrain']['params1'].keys())
-    if use_mod is None:
+    if use_mod is None:         # simple network
         Wfbk0 = wmp_train['posttrain']['params0'][usewt]
         Wfbk1 = wmp_train['posttrain']['params1'][usewt]
-        #print(Wfbk1.shape)
-    elif use_mod=='fbk_p':
+    elif use_mod=='fbk_p':      # feedback controller network
         Wfbk0 = wmp_train['posttrain']['params0']['fbk_p'][usewt].cpu().T
         Wfbk1 = wmp_train['posttrain']['params1']['fbk_p'][usewt].cpu().T
-        #print(Wfbk1.shape)
     elif use_mod=='ff_p':
         Wfbk0 = wmp_train['posttrain']['params0']['ff_p'][usewt].cpu().T
         Wfbk1 = wmp_train['posttrain']['params1']['ff_p'][usewt].cpu().T
-
-    wout = wmp_train['posttrain']['params1']['W_out_0']
-
 
     meanFb0 = ll.norm(Wfbk0)
     meanFb1 = ll.norm(Wfbk1)
@@ -341,7 +253,7 @@ def compute_wt_angle(  wmp_train, usewt='W_in_0' ):
 
 
 def compare_speed_wtchange( all_files, idx=-1, avg_window=20, usewt='W_fbk_0' ):
-
+    ''' learning speed (logistic fit) and wt change '''
     nfiles = len(all_files)
     speed = []
     fitted_k = []
@@ -367,72 +279,12 @@ def compare_speed_wtchange( all_files, idx=-1, avg_window=20, usewt='W_fbk_0' ):
             
 
             fb0, fb1, delta = compute_wt_change(  train_res[map][0], usewt=usewt )
-            #angle_0.append(meanV0)
-            #angle_1.append(meanV1)
             meanFb0.append(fb0)
             meanFb1.append(fb1)
             deltaFb.append(delta)
 
 
     return speed, fitted_k, meanFb0, meanFb1, deltaFb
-
-
-
-'''
-ids = [8,90,56,86]
-import numpy as np
-import matplotlib.pyplot as pp
-import matplotlib as mpl
-from tools.measures import *
-allres=[]
-file='trained_wmp_trainFbk200_.npy'
-folder = 'wmp/relu_/'
-suffix='_new__PC8/'
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres.append(ar['train_res'])
- 
-
-speed, fitted_k, meanFb0, meanFb1, deltaFb = compare_speed_wtchange(allres)
-
-
-folder = 'omp/relu_/'
-file='trained_omp_trainFbk200_.npy'
-suffix='_new__PC8/'
-allres2=[]
-for jj in ids:
-    fname = folder+'Model_'+np.str_(jj)+'_movePC'+suffix+file
-    ar = np.load(fname, allow_pickle=True).item()
-    allres2.append(ar['train_res'])
-
-speed2, fitted_k2, meanFb02, meanFb12, deltaFb2= compare_speed_wtchange(allres2)
-
-pp.close()
-pp.scatter(meanFb1,speed)
-pp.scatter(meanFb12,speed2,c='r')
-#pp.ylim([100,510])
-pp.savefig('speed.png')
-pp.close()
-pp.scatter(meanFb1,fitted_k)
-pp.scatter(meanFb12,fitted_k2,c='r')
-pp.savefig('fittedk.png')
-
-s1 = np.array(speed)
-s2=np.array(speed2)
-s = np.hstack((s1,s2))
-
-k1 = np.array(fitted_k)
-k2=np.array(fitted_k2)
-k = np.hstack((k1,k2))
-
-f1= np.array(meanFb1)
-f2= np.array(meanFb12)
-f = np.hstack((f1,f2))
-
-np.corrcoef(f,s)
-np.corrcoef(k,s)
-'''
 
 
 '''
@@ -492,7 +344,7 @@ def get_vectorfld_change( res, params0, params1 ):
 def get_vectorfld_prcptron( model, res, params0, params1, nonlinearity='relu', alpha=0.2 ):
 
     # reshape:
-    usetm = np.arange(200,500)
+    usetm = np.arange(200,500)      # movement period only
 
     rt = res['activity1'][:,usetm,:]
     rt = np.reshape( rt, (rt.shape[0]*rt.shape[1],rt.shape[2]) )
@@ -625,10 +477,10 @@ def get_vectorfld_in_U( res, params0, params1, U , nPC=8):
 
 
 
-def get_velocity_change( res_post, res_orig, res_pre, params0, params1 ):
+def get_velocity_change( res_post, res_orig, res_pre, params0, params1 , tm=[200,500] ):
 
     # reshape:
-    usetm = np.arange(200,500)
+    usetm = np.arange(tm[0],tm[1])
 
     rt = res_orig['activity1'][:,usetm,:]
     rt = np.reshape( rt, (rt.shape[0]*rt.shape[1],rt.shape[2]) )
@@ -727,10 +579,10 @@ def get_vectorfld_change( res, params0, params1 , nonlinearity='relu', alpha=0.2
 
 
 
-def get_vectorfld_change_all( res, params0, params1 , nonlinearity='relu', alpha=0.2):
+def get_vectorfld_change_all( res, params0, params1 , nonlinearity='relu', alpha=0.2, tm=[200,500] ):
 
     # reshape:
-    usetm = np.arange(200,500)
+    usetm = np.arange(tm[0],tm[1])
     rt = res['activity1'][:,usetm,:]
     rt = np.reshape( rt, (rt.shape[0]*rt.shape[1],rt.shape[2]) )
     stim = res['stimulus'][:,usetm,:]
@@ -776,8 +628,8 @@ def get_vectorfld_change_all( res, params0, params1 , nonlinearity='relu', alpha
     fracZ_fb = np.divide( ll.norm((zpost_fb-zpre_fb),axis=1), ll.norm(zpre,axis=1) )
     fracZ_rec = np.divide( ll.norm((zpost_rec-zpre_rec),axis=1), ll.norm(zpre,axis=1) )
 
-    velpre = zpre @ params1['W_out_0']
-    velpost = zpost @ params1['W_out_0']
+    velpre = xpre @ params1['W_out_0']
+    velpost = xpost @ params1['W_out_0']
     fracvel = np.divide( ll.norm(velpost-velpre,axis=1), ll.norm(velpre,axis=1) )
     
     # average across timepoints
@@ -839,6 +691,19 @@ def get_variance_in_U( X, U, npc=8 ):
 
 
 def get_change_IM( Xpre, Xpost, U, wpert, npc=8 ):
+    """
+    Compute the change in intrinsic manifold before and after retraining.
+
+    Parameters:
+    - Xpre (np.ndarray): Pre-training data matrix.
+    - Xpost (np.ndarray): Post-training data matrix.
+    - U (np.ndarray): Matrix of principal components.
+    - wpert (np.ndarray): Perturbation matrix.
+    - npc (int, optional): Number of principal components to consider. Default is 8.
+
+    Returns:
+    - tuple: A tuple containing the dot product of variance-along-dim vectors, subspace angles, and influence overlap.
+    """
     tr, tm, neu = Xpre.shape
     Xpre = np.reshape(Xpre, (tr*tm,neu))
     Xpre = Xpre-np.mean(Xpre,axis=0)
@@ -847,9 +712,11 @@ def get_change_IM( Xpre, Xpost, U, wpert, npc=8 ):
     Xpost = np.reshape(Xpost, (tr*tm,neu))
     Xpost = Xpost-np.mean(Xpost,axis=0)
 
-    sigma_pre = Xpre.T @ Xpre               # covariance matrix
+    # Compute covariance matrices
+    sigma_pre = Xpre.T @ Xpre              
     sigma_post = Xpost.T @ Xpost
 
+    # Compute explained variance along principal components
     uv = U[:,:npc].T
     ev_within_pre = np.diag( uv @ sigma_pre @ uv.T )    # ev along different pcs
     ev_total_pre = np.trace(sigma_pre)
