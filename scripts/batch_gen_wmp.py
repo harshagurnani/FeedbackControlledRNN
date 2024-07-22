@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Batch Script - generate a bunch of WMPs and save their properties, including for filtering
+Usage:
+    python batch_gen_wmp.py [-h] [-F FOLDER] [-sf SUFFIX] [-nf NFILES] [-idx INDEX] [-sign SIGMA_N] [-pc NPC_FIT] [-tF FIT_MAXT] [-tM TEST_MAXT] [-nlist NLIST_SUB] [-U0 U_ANG0] [-U1 U_ANG1] [-ratio0 RATIO_LIM0] [-ratio1 RATIO_LIM1] [-vel0 VELRANGE0] [-vel1 VELRANGE1] [-tm0 USETM0] [-tm1 USETM1]
+
+'''
+
 import numpy as np
 import os
 from pathlib import Path

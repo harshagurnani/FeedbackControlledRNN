@@ -1,4 +1,6 @@
-"""define recurrent neural networks"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""define simple module for RNN"""
 
 import torch
 import torch.nn as nn

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import scipy.linalg as ll
 from matplotlib import pyplot as pp
@@ -8,7 +11,7 @@ from sklearn.linear_model import LinearRegression
 from scipy.ndimage import uniform_filter1d
 
 
-# various assortments of functions for simple calculations
+'''various assortments of functions for simple calculations'''
 
 
 # Calculate performance error - specifically in hold period and end period by default

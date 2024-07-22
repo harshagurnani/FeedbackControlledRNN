@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Perturb the network along different directions and measure the impact on activity and behavior via area under curve.
+Main function is analyse_files() which takes a list of files and computes the impact of activity perturbations for various amplitudes.
+'''
+
 import numpy as np
 import scipy.linalg as ll
 import tools.perturb_network_ as pn

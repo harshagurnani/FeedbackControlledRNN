@@ -1,5 +1,11 @@
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # ---------------------------------------------- ##
+'''
+add more options for new experiments (WMP/OMP folders and files)
+'''
 # ---------------------------------------------- ##
 import numpy as np
 import os, inspect
@@ -9,21 +15,22 @@ parentdir = os.path.dirname(currentdir)+'/'
 def get_folders( opt ):
 
     if opt=='relu_test_':
+        # Main top-level architecture (in use_models)
         path=parentdir
-        subf = 'relu_/'         # Main top-level architecture (eg in use_models)
+        subf = 'relu_/'        
         save_suffix ='_relu_test_inp200_'
         # wt change for feedback:
-        use_fbwt= 'W_fbk_0'##'W_fbk_0'#'output.weight' #'W_fbk_0'#
-        use_mod = None### 'fbk_p'#None# 
-        percp=False
+        use_fbwt= 'W_fbk_0' ##'output.weight' if using perceptron architecture
+        use_mod = None      # 'fbk_p' if using perceptron architecture
+        percp=False         # True if using perceptron architecture
         
         ###### Will search for all files in wmp['folder']+'/Model_**'+wmp['suffix']+wmp['file'][jj]
         wmp={}                  # FOR WMPs
         wmp['folder'] = path+'wmp/'+subf
-        wmp['file']   = ['trained_wmp_trainInp200.npy', 'trained_wmp_trainInp200_v2_.npy']         # filenames
+        wmp['file']   = ['trained_wmp_trainInp200.npy', 'trained_wmp_trainInp200_v2_.npy']         # filenames of training results
         wmp['save_suffix']=save_suffix                          # plot suffix
-        wmp['suffix']='_PC8'                                   # loading directory suffix
-        wmp['savfolder'] = wmp['folder']+'plots_test_/'           # save directory
+        wmp['suffix']='_PC8'                                    # loading directory suffix
+        wmp['savfolder'] = wmp['folder']+'plots_test_/'         # save directory
         npro=True
 
         ###### Will search for all files in omp['folder']+'/Model_**'+omp['suffix']+omp['file'][jj]

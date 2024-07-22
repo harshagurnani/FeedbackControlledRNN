@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+This script is used to train a model on WMPs/OMPs/RMPs that pass certain criteria. 
+
+Usage:
+    python batch_train_perturbation.py [-h] [-F FOLDER] [-file FN] [-n1 N1] [-sf SUFFIX] [-sf2 SUFFIX2] [-map MAPTYPE] [-twp TRAIN_WP]
+                                      [-seed TRAIN_SEED] [-sign SIGMA_N] [-nf NFILES] [-idx INDEX] [-ntr NTRAIN] [-nr NREPS]
+                                      [-cv0 CVRANGE0] [-cv1 CVRANGE1] [-sr0 SUCCESS_RANGE0] [-sr1 SUCCESS_RANGE1]
+                                      [-inp TRAININP] [-fbk TRAINFBK] [-rec TRAINREC] [-fbout TRAINFBOUT] [-pc NPC_FIT]
+                                      [-maxT MAXT] [-tMt TEST_MAXT] [-lr LR] [-te TRAINING_EPOCHS] [-pe PERTURB_EPOCHS]
+                                      [-bsz BATCH_SIZE] [-alp1 ALPHA1] [-gam1 GAMMA1] [-bet1 BETA1] [-alp2 ALPHA2]
+'''
 import numpy as np
 import os
 import sys

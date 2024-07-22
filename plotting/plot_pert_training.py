@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import os
 import sys
@@ -19,6 +22,10 @@ import control as ctrl
 import control.matlab as mt
 from control.statesp import StateSpace
 import control.modelsimp as msimp
+
+'''
+functions to plot measures between pre and post training of perturbed decoders
+'''
 
 
 def plot_progress( results, savfolder='', suffix='_test' ):

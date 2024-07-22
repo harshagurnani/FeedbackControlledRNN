@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Functions to train multiple decoder perturbations
+'''
 import numpy as np
 import os
 import sys

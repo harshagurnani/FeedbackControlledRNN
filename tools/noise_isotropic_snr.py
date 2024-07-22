@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Perturb activity by isotropic gaussian noise and calculate SNR for different directions in activity space.
+Main function is analyse_files() which takes a list of files and calculates SNR for different noise levels.
+'''
+
 import numpy as np
 import scipy.linalg as ll
 import tools.perturb_network_ as pn

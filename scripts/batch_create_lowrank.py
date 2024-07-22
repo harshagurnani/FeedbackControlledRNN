@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 '''
 Batch Script: Create a set of models with different parameters
 Fixed initialisation scales.

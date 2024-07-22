@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+'''
+Batch Script - generate a bunch of OMPs and save their properties, including for filtering
+Usage:
+    python batch_gen_omp.py [-h] [-F FOLDER] [-sf SUFFIX] [-nf NFILES] [-idx INDEX] [-sign SIGMA_N] [-pc NPC_FIT] [-tF FIT_MAXT] [-tM TEST_MAXT] [-nlist NLIST_SUB] [-U0 U_ANG0] [-U1 U_ANG1] [-ratio0 RATIO_LIM0] [-ratio1 RATIO_LIM1] [-vel0 VELRANGE0] [-vel1 VELRANGE1] [-tm0 USETM0] [-tm1 USETM1]
+
+'''
+
 import numpy as np
 import os
 import sys
@@ -26,7 +36,34 @@ import scipy.linalg as ll
 def sweep_omp(loadname='use_models/relu_', savfolder='/omp/relu_/', n1files=None, maxfiles=10, suffix = '_PC7', save_pn = True, index=1, 
               fit_maxT = 1000,  test_maxT=1500, noiseX=0.1, nTest=200, nPC_fit=7,  sigma_n=0.0, 
               nList_sub=5000, theta_wout=[20,80], ratio_lim=[0.5,2], velAngle=[30,75], tm_range=[200,500] , device=None ):
-    
+    '''
+    Perform an OMP sweep on a set of model files and save the results.
+
+    Args:
+        loadname (str): Folder name in use_models containing model files.
+        savfolder (str): Folder name to save the results.
+        n1files (list): List of model files to use for the OMP sweep.
+        maxfiles (int): Maximum number of model files to use.
+        suffix (str): Suffix for saving results.
+        save_pn (bool): Whether to save the perturbed network.
+        index (int): CUDA device index.
+        fit_maxT (int): Simulation time to calculate PCs.
+        test_maxT (int): Simulation time to test the model.
+        noiseX (float): Noise level for fitting the intuitive decoder.
+        nTest (int): Number of test trials for fitting the intuitive decoder.
+        nPC_fit (int): Number of PCs to use for dimension reduction for the intuitive decoder.
+        sigma_n (float): Activity noise sigma.
+        nList_sub (int): Maximum number of random OMPs to check.
+        theta_wout (list): Min and max angular difference between perturbed readout and PC space (degrees).
+        ratio_lim (list): Min and max ratio between open loop velocities.
+        velAngle (list): Min and max angular difference between open loop velocities (degrees).
+        tm_range (list): Min and max time to include for getting top PCs.
+        device (torch.device): CUDA device to use.
+
+    Returns:
+        list: List of dictionaries containing the results of the OMP sweep.
+
+    '''
     print('...Starting OMP Sweep for models in '+loadname+' ...')
     # all model files
     if n1files is None:

@@ -1,4 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+'''
+Regression tools for fitting linear models to learning outcomes.
+'''
 import numpy as np
 import matplotlib.pyplot as pp
 import matplotlib as mpl

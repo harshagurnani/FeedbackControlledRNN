@@ -1,4 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+'''
+Batch script
+This script compares and plots results for WMP and OMP.
+It loads and analyzes data, saves results, and plots various measures and learning outcome regression plots.
+
+Usage: python batch_pert_analysis.py [-F FOLDER] [-npro NPRO]
+            - FOLDER: Option to set up list of folders to compare, specified in tools/list_of_folders.py
+'''
 
 import numpy as np
 import os, glob, argparse, inspect, sys
