@@ -12,7 +12,13 @@ doi: https://doi.org/10.1101/2024.05.24.595772
 
 ![image1](img/model.png)
 
+# Dependencies
+Requires Python 3.X, Pytorch, and openly-available Python packages. Code works on both CUDA and non-CUDA devices (including Apple M1).
 
+# Installation
+Standard pip-install and environment managers. See [requirements.txt](requirements.txt).
+
+# Usage
 
 For details, look at:
 - [Model construction](#model-construction)
