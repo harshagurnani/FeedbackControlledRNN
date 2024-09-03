@@ -27,7 +27,7 @@ For details, look at:
 - [Analysis of RNN dynamics](#rnn-analysis)
 
 ## Model construction
-To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [use_models/](/use_models)
+To create and train new models, use the `scripts/batch_create_sparse.py` file. You can specify various options for construction, including foldername `-F` and number of models `-nf`. The folder will be inside [use_models/](/use_models). Training a network takes 5-20 min.
 
 **Example 1:** Simple velocity decoder
 ```
@@ -48,7 +48,7 @@ $ python batch_create_network.py -F 'percp_expansion_/' -nf 2 -te 450 -pe 250 -l
 
 ## Generate and filter perturbed maps
 <img src="img/pert.png" alt="Perturbed Maps"  height="400">
-Decide which models to use (follow [model construction](#model-construction) first), specify the dimensionality of the intrinsic manifold, and optionally specify conditions for filtering perturbed decoders:
+Decide which models to use (follow [model construction](#model-construction) first), specify the dimensionality of the intrinsic manifold, and optionally specify conditions for filtering perturbed decoders. Filtering through 10K perturbations (for n=8PCs) typically takes 30-120 min.
 
 Results are in [wmp/](/wmp/), [omp/](/omp/) or [rmp/](/rmp/). Each model file will have its own folder with filtered WMPs saved in `WMP_maps.npy` and the combined results will be in `xmp_tested_movepc_PCK.npy` where `xmp` is wmp, omp or rmp, and `PCK` specifies the intrinsic manifold dimensionality K.
 
