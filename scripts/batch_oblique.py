@@ -100,7 +100,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Global parameters ------------------------------------------------
-    mfolder = parentdir+'saved_plots/oblique_dynamics/'
+    mfolder = parentdir+'/saved_plots/oblique_dynamics/'
     if not os.path.exists( mfolder ):
         os.makedirs(mfolder)
 
